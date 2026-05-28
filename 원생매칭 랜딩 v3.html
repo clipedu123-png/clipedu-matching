@@ -1,0 +1,2399 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>CLIPEDU · 원생매칭 플랫폼</title>
+<meta name="responsive-build" content="2026-05-27-v2">
+<meta name="description" content="원생 유지, 자신 있으신가요? 원생 유입은 우리가 할게요! 검증된 학부모와 학원을 데이터로 매칭하는 원생매칭 플랫폼.">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/favicon.png">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" as="style" crossorigin
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+
+<!-- Supabase Client Library (UMD) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0"></script>
+
+<style>
+  /* ---------- TOKENS ---------- */
+  :root{
+    --bg:#EEF3FC;
+    --bg-deep:#E1EAF8;
+    --paper:#FFFFFF;
+    --ink:#15243F;
+    --ink-2:#5C6A85;
+    --ink-3:#8B96AE;
+    --accent:#2E7DF6;
+    --accent-deep:#1C5FD6;
+    --accent-2:#21C8E4;
+    --line:#E3E8F0;
+    --line-soft:rgba(46,125,246,0.12);
+    --dark:#142844;
+    --dark-2:#1A2E50;
+    --grad:linear-gradient(135deg,#3D8BFF 0%,#2BA6F0 52%,#34D2DE 100%);
+    --grad-cyan:linear-gradient(135deg,#21C8E4 0%,#3D8BFF 100%);
+    --grad-dark:linear-gradient(165deg,#173A66 0%,#102540 60%,#15355C 100%);
+    --shadow-soft:0 20px 40px -10px rgba(46,125,246,0.08);
+    --shadow-card:0 10px 30px -10px rgba(28,70,150,0.12);
+    --shadow-float:0 30px 60px -15px rgba(28,70,150,0.16);
+    --shadow-cta:0 14px 32px -10px rgba(46,125,246,0.5);
+    --shadow-cta-strong:0 20px 40px -10px rgba(46,125,246,0.6);
+    --font-sans:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,system-ui,Roboto,'Helvetica Neue','Apple SD Gothic Neo',sans-serif;
+    --r-pill:999px;
+    --r-lg:24px;
+    --r-card:20px;
+    --r-md:16px;
+    --r-sm:12px;
+    --sec-py:130px;
+    --wrap:1180px;
+  }
+
+  /* ---------- BASE ---------- */
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--font-sans);
+    font-weight:400;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.65;
+    overflow-x:hidden;
+    word-break:keep-all;
+    overflow-wrap:break-word;
+  }
+  ::selection{background:var(--accent);color:#fff;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;}
+  img{display:block;max-width:100%;}
+
+  h1,h2,h3,h4{font-weight:700;letter-spacing:-0.02em;line-height:1.22;}
+
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 40px;}
+  .text-gradient{
+    background:var(--grad);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;color:transparent;
+    display:inline-block;
+  }
+
+  /* ---------- SECTION SHELL ---------- */
+  section{padding:var(--sec-py) 0;position:relative;}
+  .bg-soft{background:var(--bg);}
+  .bg-deeper{background:var(--bg-deep);}
+  .sec-label{
+    display:inline-flex;align-items:center;
+    font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:18px;
+  }
+  .sec-title{
+    font-size:clamp(2rem,3.4vw,2.75rem);line-height:1.22;letter-spacing:-.025em;
+    color:var(--ink);
+  }
+  .sec-sub{
+    color:var(--ink-2);font-size:17px;line-height:1.7;margin-top:18px;max-width:54ch;
+  }
+
+  /* ---------- BUTTONS ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:14px 28px;border-radius:var(--r-pill);
+    font-weight:600;font-size:15px;letter-spacing:-.01em;
+    cursor:pointer;border:none;transition:transform .25s ease,box-shadow .25s ease,background .25s ease;
+  }
+  .btn-primary{background:var(--grad);color:#fff;box-shadow:var(--shadow-cta);}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:var(--shadow-cta-strong);}
+  .btn-primary-lg{padding:18px 38px;font-size:17px;}
+  .btn-primary-xl{padding:22px 46px;font-size:18px;box-shadow:var(--shadow-cta-strong);}
+  .btn-primary-xl:hover{transform:translateY(-3px);box-shadow:0 26px 50px -12px rgba(46,125,246,0.7);}
+  .btn-ghost{background:transparent;color:var(--ink-2);padding:14px 4px;}
+  .btn-ghost:hover{color:var(--accent-deep);}
+  .btn-ghost-line{
+    background:transparent;color:var(--ink);
+    box-shadow:inset 0 0 0 1px var(--line);
+  }
+  .btn-ghost-line:hover{box-shadow:inset 0 0 0 1px var(--accent);color:var(--accent-deep);}
+  .btn-on-dark{background:rgba(255,255,255,.08);color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);}
+  .btn-on-dark:hover{background:rgba(255,255,255,.14);}
+  .btn .arrow{display:inline-block;transition:transform .25s ease;}
+  .btn-primary:hover .arrow{transform:translateX(4px);}
+
+  /* ---------- NAV ---------- */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    transition:background .3s ease,box-shadow .3s ease,padding .3s ease;
+    padding:20px 0;
+  }
+  header.scrolled{
+    background:rgba(255,255,255,.85);
+    backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+    box-shadow:0 6px 24px -12px rgba(28,70,150,.18);
+    padding:12px 0;
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;}
+  .brand{
+    display:flex;align-items:center;gap:10px;
+  }
+  .brand-logo{height:32px;width:auto;display:block;}
+  .brand small{
+    font-size:12px;color:var(--ink-2);font-weight:500;letter-spacing:0;
+    padding-left:12px;margin-left:4px;border-left:1px solid var(--line);
+  }
+  .nav-links{display:flex;gap:36px;list-style:none;align-items:center;}
+  .nav-links ul{display:flex;gap:36px;list-style:none;}
+  .nav-links li{margin:0;}
+  .nav-links a{
+    font-size:14.5px;font-weight:500;color:var(--ink-2);
+    transition:color .2s ease, border-color .2s ease;padding:8px 0;
+    border-bottom:2px solid transparent;position:relative;bottom:-2px;
+  }
+  .nav-links a:hover{color:var(--accent);}
+  .nav-links a.active{
+    color:var(--accent);
+    border-bottom:2px solid var(--accent);
+    font-weight:600;
+  }
+  .nav-cta{padding:11px 22px;font-size:14px;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:170px 0 0;
+    background:radial-gradient(900px 600px at 80% -10%,rgba(61,139,255,.22),transparent 70%),
+               radial-gradient(800px 700px at -10% 110%,rgba(52,210,222,.16),transparent 70%),
+               #ffffff;
+    position:relative;
+  }
+  .hero-grid{
+    display:block;
+    min-height:420px;
+  }
+  .hero-text{max-width:780px;}
+  .hero-eyebrow{
+    display:inline-flex;align-items:center;gap:10px;
+    background:#fff;padding:9px 16px;border-radius:var(--r-pill);
+    box-shadow:0 4px 14px -4px rgba(28,70,150,.08);
+    margin-bottom:24px;
+  }
+  .live-dot{
+    width:8px;height:8px;border-radius:50%;background:#FF4D6D;position:relative;
+  }
+  .live-dot::after{
+    content:"";position:absolute;inset:-4px;border-radius:50%;
+    border:2px solid #FF4D6D;animation:livePulse 2s ease-out infinite;
+  }
+  @keyframes livePulse{
+    0%{transform:scale(.5);opacity:.8;}
+    100%{transform:scale(1.6);opacity:0;}
+  }
+  .hero-eyebrow .live-label{font-size:11.5px;font-weight:700;color:#E63956;letter-spacing:.06em;}
+  .hero-eyebrow .kicker{font-size:12px;color:var(--ink-2);font-weight:600;letter-spacing:.04em;}
+  .hero-eyebrow .divider{width:1px;height:11px;background:var(--line);}
+
+  .hero h1{
+    font-size:clamp(2.6rem,4.4vw,3.75rem);
+    font-weight:700;line-height:1.18;letter-spacing:-.03em;
+    color:var(--ink);margin-bottom:22px;
+  }
+  .hero-sub{
+    font-size:18px;color:var(--ink);font-weight:500;line-height:1.65;
+    margin-bottom:14px;max-width:38ch;
+  }
+  .hero-lead{
+    font-size:14.5px;color:var(--ink-2);font-weight:400;
+    margin-bottom:38px;
+  }
+  .hero-actions{display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+
+  /* Hero proof strip — full-bleed bottom marquee (V03 style) */
+  .hero-proof{
+    width:100vw;
+    margin-left:calc(-50vw + 50%);
+    margin-top:80px;
+    background:rgba(255,255,255,.78);
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border-top:1px solid var(--line);
+    padding:22px 0;
+    position:relative;
+  }
+  .hero-proof-inner{
+    max-width:var(--wrap);margin:0 auto;padding:0 40px;
+    display:flex;align-items:center;gap:32px;
+  }
+  .hero-proof-headline{
+    font-size:14.5px;font-weight:600;color:var(--ink);flex-shrink:0;letter-spacing:-.01em;
+  }
+  .hero-proof-headline .em{color:var(--accent);font-weight:700;}
+  .hero-proof-marquee{
+    flex:1;overflow:hidden;position:relative;-webkit-mask:linear-gradient(90deg,transparent 0,#000 8%,#000 92%,transparent 100%);
+            mask:linear-gradient(90deg,transparent 0,#000 8%,#000 92%,transparent 100%);
+  }
+  .hero-proof-track{
+    display:flex;align-items:center;gap:48px;width:max-content;
+    opacity:.5;filter:grayscale(1);
+    transition:opacity .35s ease,filter .35s ease;
+    animation:scrollHorizontal 30s linear infinite;
+  }
+  .hero-proof-marquee:hover .hero-proof-track{
+    opacity:1;filter:grayscale(0);
+    animation-play-state:paused;
+  }
+  @keyframes scrollHorizontal{
+    0%{transform:translateX(0);}
+    100%{transform:translateX(-50%);}
+  }
+  .hero-proof-track .academy{
+    display:flex;align-items:center;gap:9px;
+    font-weight:700;font-size:17px;color:var(--ink);letter-spacing:-.015em;
+    flex-shrink:0;
+  }
+  .hero-proof-track .academy .mark{
+    width:30px;height:30px;background:#CBD5E1;flex-shrink:0;
+  }
+  .hero-proof-track .academy .mark.sq{border-radius:6px;}
+  .hero-proof-track .academy .mark.round{border-radius:50%;}
+  .hero-proof-track .academy .mark.diamond{border-radius:4px;transform:rotate(45deg);}
+  .hero-proof-track .academy .mark.lg{border-radius:10px;}
+  .hero-proof-track .academy .mark.sm{border-radius:3px;}
+
+  /* ---------- ABOUT — 2-col text(L) + V2 persona graphic(R) ---------- */
+  #about{background:var(--bg);}
+  .about-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:stretch;
+  }
+  .about-content{display:flex;flex-direction:column;justify-content:center;}
+  .about-content .sec-label.about-label::before{display:none;}
+  .about-content .sec-title{
+    margin-top:18px;margin-bottom:24px;
+    font-size:clamp(2.2rem,3.6vw,2.9rem);line-height:1.2;
+  }
+  .about-content .sec-title .text-gradient{
+    background:var(--grad);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;color:transparent;
+  }
+  .about-subtext{
+    font-size:16.5px;color:var(--ink-2);line-height:1.8;
+    margin-bottom:42px;
+  }
+  .about-subtext strong{color:var(--ink);font-weight:700;}
+  .about-stats-2x2{
+    display:grid;grid-template-columns:1fr 1fr;gap:14px;
+  }
+  .stat-card{
+    background:#fff;border-radius:var(--r-card);padding:30px 28px;
+    box-shadow:var(--shadow-soft);
+    transition:transform .3s ease,box-shadow .3s ease;
+  }
+  .stat-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-card);}
+  .stat-card .v{
+    font-size:38px;font-weight:700;line-height:1;letter-spacing:-.03em;
+    background:var(--grad);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;color:transparent;
+    margin-bottom:10px;
+  }
+  .stat-card .l{
+    font-size:13px;color:var(--ink-2);font-weight:500;line-height:1.5;
+  }
+
+  /* About graphic — V2 persona storytelling */
+  .about-graphic{
+    position:relative;width:100%;height:560px;
+    align-self:center;
+  }
+  .about-graphic::before,
+  .about-graphic::after{
+    content:"";position:absolute;border-radius:50%;
+    pointer-events:none;z-index:0;
+  }
+  .about-graphic::before{
+    width:300px;height:300px;top:20px;right:10px;
+    background:radial-gradient(circle,rgba(61,139,255,.18),transparent 70%);
+    filter:blur(40px);
+  }
+  .about-graphic::after{
+    width:320px;height:320px;bottom:10px;left:-20px;
+    background:radial-gradient(circle,rgba(52,210,222,.15),transparent 70%);
+    filter:blur(40px);
+  }
+  /* Rotating dashed orbit rings (background) */
+  .ag-orbits{
+    position:absolute;top:50%;left:50%;
+    transform:translate(-50%,-50%);
+    width:500px;height:500px;
+    pointer-events:none;z-index:1;
+  }
+  .ag-orbits svg{width:100%;height:100%;overflow:visible;}
+  .ag-orbits .ring{
+    fill:none;stroke:rgba(46,125,246,.42);
+    stroke-width:1.2;stroke-dasharray:4 8;
+    transform-origin:center;
+  }
+  .ag-orbits .ring-1{animation:agOrbitRotate 60s linear infinite;}
+  .ag-orbits .ring-2{animation:agOrbitRotate 90s linear infinite reverse;}
+  .ag-orbits .ring-3{animation:agOrbitRotate 120s linear infinite;}
+  @keyframes agOrbitRotate{
+    from{transform:rotate(0);}
+    to{transform:rotate(360deg);}
+  }
+  /* Small floating real-time data badges */
+  .ag-badge{
+    position:absolute;
+    background:#fff;border-radius:999px;
+    padding:7px 14px 7px 26px;
+    font-size:11px;font-weight:600;color:var(--ink);letter-spacing:-.01em;
+    box-shadow:0 8px 20px -6px rgba(28,70,150,.18),
+               0 0 0 1px rgba(46,125,246,.06);
+    white-space:nowrap;z-index:2;
+  }
+  .ag-badge::before{
+    content:"";position:absolute;left:11px;top:50%;transform:translateY(-50%);
+    width:7px;height:7px;border-radius:50%;background:var(--accent);
+    box-shadow:0 0 0 0 rgba(46,125,246,.5);
+    animation:agBadgePulse 2s ease-out infinite;
+  }
+  @keyframes agBadgePulse{
+    0%{box-shadow:0 0 0 0 rgba(46,125,246,.5);}
+    100%{box-shadow:0 0 0 8px rgba(46,125,246,0);}
+  }
+  .ag-badge.b1{top:6%;right:6%;animation:agBadgeFloat 5s ease-in-out infinite;}        /* Q1 top-right */
+  .ag-badge.b2{bottom:14%;right:2%;animation:agBadgeFloat 5.4s ease-in-out infinite 1s;} /* Q4 bottom-right */
+  .ag-badge.b3{bottom:18%;left:6%;animation:agBadgeFloat 6s ease-in-out infinite 1.6s;}  /* Q3 bottom-left */
+  .ag-badge.b4{top:10%;left:4%;animation:agBadgeFloat 5.2s ease-in-out infinite 2.2s;}   /* Q2 top-left */
+  @keyframes agBadgeFloat{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-6px);}
+  }
+  /* Small floating pulse dots on orbits (data flow points) */
+  .ag-dot{
+    position:absolute;width:9px;height:9px;border-radius:50%;
+    background:var(--accent);z-index:1;
+  }
+  .ag-dot::after{
+    content:"";position:absolute;inset:-5px;border-radius:50%;
+    border:1.5px solid var(--accent);
+    animation:agDotPulse 2.4s ease-out infinite;
+  }
+  .ag-dot.d1{top:24%;right:24%;}
+  .ag-dot.d1::after{animation-delay:.4s;}
+  .ag-dot.d2{bottom:28%;left:22%;}
+  .ag-dot.d2::after{animation-delay:1.2s;}
+  .ag-dot.d3{top:54%;right:14%;width:7px;height:7px;}
+  .ag-dot.d3::after{animation-delay:1.9s;}
+  @keyframes agDotPulse{
+    0%{transform:scale(.5);opacity:.9;}
+    100%{transform:scale(2.4);opacity:0;}
+  }
+  .persona-card{
+    position:absolute;width:308px;
+    background:#fff;border-radius:18px;padding:20px 22px;
+    box-shadow:0 30px 60px -20px rgba(28,70,150,.2),
+               0 8px 22px -10px rgba(28,70,150,.1);
+    z-index:2;
+  }
+  .persona-card.parent{
+    top:30px;left:0;
+    animation:abFloatA 5.2s ease-in-out infinite;
+  }
+  .persona-card.academy{
+    bottom:30px;right:0;
+    animation:abFloatB 5.6s ease-in-out infinite .7s;
+  }
+  @keyframes abFloatA{
+    0%,100%{transform:rotate(-2deg) translateY(0);}
+    50%{transform:rotate(-2deg) translateY(-9px);}
+  }
+  @keyframes abFloatB{
+    0%,100%{transform:rotate(2.4deg) translateY(0);}
+    50%{transform:rotate(2.4deg) translateY(-9px);}
+  }
+  .persona-card .card-head{
+    display:flex;align-items:flex-start;gap:12px;
+    padding-bottom:16px;border-bottom:1px solid var(--line);
+    margin-bottom:14px;position:relative;
+  }
+  .persona-card .avatar{
+    width:38px;height:38px;border-radius:11px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    font-size:18px;
+  }
+  .persona-card.parent .avatar{
+    background:linear-gradient(135deg,#E0EDFF,#C5DAF8);color:var(--accent-deep);
+  }
+  .persona-card.academy .avatar{
+    background:linear-gradient(135deg,#E0F5F0,#C2EBE0);color:#0F9587;
+  }
+  .persona-card .info{flex:1;min-width:0;}
+  .persona-card .name{
+    font-size:14.5px;font-weight:700;color:var(--ink);letter-spacing:-.01em;
+    margin-bottom:3px;
+    display:flex;align-items:center;gap:5px;
+  }
+  .persona-card.academy .name::after{
+    content:"";width:14px;height:14px;border-radius:50%;background:var(--accent);
+    -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z' fill='black'/></svg>") no-repeat center / 10px;
+            mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z' fill='black'/></svg>") no-repeat center / 10px;
+  }
+  .persona-card .loc{
+    font-size:11.5px;color:var(--ink-2);
+    display:flex;align-items:center;gap:4px;
+  }
+  .persona-card .status-badge{
+    position:absolute;top:-6px;right:-6px;
+    background:#fff;color:var(--accent);
+    font-size:11px;font-weight:700;letter-spacing:-.01em;
+    padding:5px 11px;border-radius:999px;
+    box-shadow:0 6px 16px -4px rgba(28,70,150,.2),
+               0 0 0 1px rgba(46,125,246,.08);
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  .persona-card .status-badge::before{
+    content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);
+    box-shadow:0 0 0 0 var(--accent);
+    animation:abStatusPulse 1.8s ease-out infinite;
+  }
+  @keyframes abStatusPulse{
+    0%{box-shadow:0 0 0 0 rgba(46,125,246,.6);}
+    100%{box-shadow:0 0 0 8px rgba(46,125,246,0);}
+  }
+  .persona-card .card-rows{
+    display:flex;flex-direction:column;gap:9px;margin-bottom:14px;
+  }
+  .persona-card .row{
+    display:flex;justify-content:space-between;align-items:baseline;
+    font-size:12.5px;
+  }
+  .persona-card .row .k{color:var(--ink-2);font-weight:500;}
+  .persona-card .row .v{color:var(--ink);font-weight:700;letter-spacing:-.01em;}
+  .persona-card .card-tags{display:flex;gap:6px;flex-wrap:wrap;}
+  .persona-card .tag{
+    font-size:10.5px;color:var(--accent-deep);font-weight:600;
+    background:rgba(46,125,246,.08);padding:4px 9px;border-radius:6px;
+  }
+  .persona-card .card-progress{margin-top:6px;}
+  .persona-card .card-progress .bar{
+    width:100%;height:6px;background:var(--bg);border-radius:999px;overflow:hidden;
+    margin-bottom:6px;
+  }
+  .persona-card .card-progress .fill{
+    height:100%;width:0;background:var(--grad);border-radius:999px;
+    animation:abFillGrow 1.5s cubic-bezier(.2,.7,.2,1) .9s both;
+  }
+  @keyframes abFillGrow{
+    from{width:0;}
+    to{width:92%;}
+  }
+  .persona-card .card-progress .bar-label{
+    font-size:10.5px;color:var(--ink-2);font-weight:500;
+    display:block;text-align:right;
+  }
+  /* Match core — circular center anchor of orbital system */
+  .match-badge{
+    position:absolute;
+    top:50%;left:50%;transform:translate(-50%,-50%);
+    width:144px;height:144px;border-radius:50%;
+    background:var(--grad);color:#fff;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;overflow:hidden;
+    z-index:3;
+    animation:abBadgePulse 3.2s ease-in-out infinite;
+  }
+  /* subtle inner gloss highlight */
+  .match-badge::before{
+    content:"";position:absolute;inset:0;border-radius:50%;
+    background:linear-gradient(160deg,rgba(255,255,255,.32) 0%,rgba(255,255,255,0) 45%);
+    pointer-events:none;
+  }
+  .match-badge .v{
+    position:relative;z-index:1;
+    font-size:46px;font-weight:700;line-height:1;letter-spacing:-.03em;
+    margin-bottom:6px;
+  }
+  .match-badge .v .pct{
+    font-size:.5em;font-weight:600;margin-left:1px;opacity:.88;
+  }
+  .match-badge .l{
+    position:relative;z-index:1;
+    font-size:11px;font-weight:600;letter-spacing:.04em;
+    color:rgba(255,255,255,.94);
+  }
+  @keyframes abBadgePulse{
+    0%,100%{box-shadow:
+      inset 0 0 0 1px rgba(255,255,255,.22),
+      0 28px 56px -14px rgba(46,125,246,.55),
+      0 10px 26px -10px rgba(46,125,246,.35),
+      0 0 0 0 rgba(46,125,246,.3);
+    }
+    50%{box-shadow:
+      inset 0 0 0 1px rgba(255,255,255,.22),
+      0 28px 56px -14px rgba(46,125,246,.55),
+      0 10px 26px -10px rgba(46,125,246,.35),
+      0 0 0 20px rgba(46,125,246,0);
+    }
+  }
+
+  /* ---------- HOW IT WORKS — horizontal stepper + connecting line ---------- */
+  #how{background:var(--paper);}
+  .how-head{text-align:center;margin-bottom:64px;}
+  .how-head .sec-label.how-label{justify-content:center;}
+  .how-head .sec-label.how-label::before{display:none;}
+  .how-head .sec-title{margin-top:14px;margin-bottom:20px;}
+  .how-head .sec-sub{
+    max-width:48ch;margin:0 auto;
+    font-size:15.5px;color:var(--ink-2);line-height:1.75;
+  }
+  .how-steps-row{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:20px;
+    position:relative;
+  }
+  /* Dashed connecting line behind cards, centered vertically */
+  .how-steps-row::before{
+    content:"";position:absolute;
+    top:50%;left:13%;right:13%;
+    border-top:1.5px dashed rgba(46,125,246,.32);
+    transform:translateY(-50%);
+    z-index:0;
+  }
+  .how-step{
+    background:#fff;border-radius:var(--r-lg);padding:32px 26px;
+    box-shadow:var(--shadow-soft);
+    position:relative;z-index:1;
+    display:flex;flex-direction:column;align-items:flex-start;
+    transition:transform .35s ease,box-shadow .35s ease;
+  }
+  .how-step:hover{transform:translateY(-4px);box-shadow:var(--shadow-card);}
+  .how-step .icon{
+    width:56px;height:56px;border-radius:14px;
+    background:linear-gradient(135deg,#E0EDFF 0%,#C5DAF8 100%);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--accent-deep);
+    margin-bottom:22px;
+    transition:background .4s ease,color .4s ease,transform .4s ease;
+  }
+  .how-step:hover .icon{
+    background:var(--grad);color:#fff;
+    transform:scale(1.06);
+  }
+  .how-step .icon svg{width:28px;height:28px;}
+  .how-step .step-meta{
+    display:flex;align-items:center;gap:8px;margin-bottom:10px;
+  }
+  .how-step .step-meta .num{
+    font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.04em;
+  }
+  .how-step .step-meta .tag{
+    font-size:11px;font-weight:600;color:var(--ink-2);letter-spacing:-.005em;
+    padding:4px 10px;border-radius:var(--r-pill);background:var(--bg);
+  }
+  .how-step h3{
+    font-size:18px;font-weight:700;color:var(--ink);
+    margin-bottom:10px;line-height:1.4;letter-spacing:-.015em;
+  }
+  .how-step p{
+    font-size:14px;color:var(--ink-2);line-height:1.7;
+    margin-bottom:20px;
+  }
+  .how-step .time-chip{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:11px;font-weight:700;color:var(--accent-deep);letter-spacing:.02em;
+    background:rgba(46,125,246,.1);padding:5px 11px;border-radius:var(--r-pill);
+    margin-top:auto;
+  }
+  .how-step .time-chip::before{
+    content:"";width:5px;height:5px;border-radius:50%;background:var(--accent);
+  }
+
+  /* ---------- WHY CLIPEDU (2-track + 2-card compare) ---------- */
+  #why{background:var(--bg);}
+  .why-head{text-align:center;margin-bottom:72px;}
+  .why-head .sec-label.why-label{
+    display:flex;justify-content:center;align-items:center;gap:10px;
+  }
+  .why-head .sec-label.why-label::before{display:none;}
+  .why-head .why-big-num{
+    display:block;
+    font-size:clamp(5rem,9vw,8rem);font-weight:900;
+    line-height:1;letter-spacing:-.05em;
+    background:linear-gradient(180deg,#3D8BFF 0%,#34D2DE 100%);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;color:transparent;
+    margin:24px 0 18px;
+    text-shadow:0 0 0 transparent;
+  }
+  .why-head .why-big-num .plus{
+    font-size:.7em;font-weight:900;margin-left:4px;
+  }
+  .why-head .sec-title{
+    margin:0 auto;
+    font-size:clamp(1.8rem,3vw,2.4rem);line-height:1.3;
+  }
+  .why-head .why-sub{
+    font-size:15.5px;color:var(--ink-2);line-height:1.75;
+    margin:20px auto 0;max-width:50ch;
+  }
+  .why-tracks{
+    display:grid;grid-template-columns:1fr 1fr;gap:32px;
+  }
+  .why-track{
+    background:#fff;border-radius:var(--r-lg);padding:36px 32px;
+    box-shadow:var(--shadow-soft);
+    display:flex;flex-direction:column;
+  }
+  .why-track-head{
+    display:flex;align-items:center;gap:14px;padding-bottom:24px;margin-bottom:24px;
+    border-bottom:1px solid var(--line);
+  }
+  .why-track-head .badge{
+    width:46px;height:46px;border-radius:14px;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .why-track.academy .why-track-head .badge{
+    background:linear-gradient(135deg,#E3EDFF,#CFE0FA);color:var(--accent-deep);
+  }
+  .why-track.parent .why-track-head .badge{
+    background:linear-gradient(135deg,#DEF6FA,#C5EBF1);color:#0B6E80;
+  }
+  .why-track-head .badge svg{width:22px;height:22px;}
+  .why-track-head .who{
+    font-size:13px;font-weight:600;color:var(--ink-2);letter-spacing:-.01em;margin-bottom:2px;
+  }
+  .why-track-head h3{
+    font-size:19px;font-weight:700;color:var(--ink);letter-spacing:-.02em;
+  }
+  .why-list{display:flex;flex-direction:column;gap:14px;flex:1;}
+  .why-item{
+    padding:18px 20px;border-radius:var(--r-md);background:var(--bg);
+    transition:background .25s ease;
+  }
+  .why-item-head{
+    display:flex;align-items:center;gap:10px;margin-bottom:8px;
+  }
+  .why-item .no{
+    font-size:11px;font-weight:700;color:var(--accent-deep);
+    background:#fff;padding:3px 9px;border-radius:var(--r-pill);
+    letter-spacing:.04em;
+  }
+  .why-track.parent .why-item .no{color:#0B6E80;}
+  .why-item h4{
+    font-size:15.5px;font-weight:700;color:var(--ink);letter-spacing:-.015em;
+  }
+  .why-item p{
+    font-size:14px;color:var(--ink-2);line-height:1.65;
+  }
+  .why-item.highlight{
+    background:var(--grad);color:#fff;
+    box-shadow:0 14px 28px -10px rgba(46,125,246,.45);
+  }
+  .why-item.highlight .no{background:rgba(255,255,255,.22);color:#fff;}
+  .why-item.highlight h4{color:#fff;}
+  .why-item.highlight p{color:rgba(255,255,255,.92);}
+  .why-track.parent .why-item.highlight{
+    background:var(--grad-cyan);
+    box-shadow:0 14px 28px -10px rgba(33,200,228,.45);
+  }
+  .why-track-foot{
+    margin-top:28px;padding:16px 20px;
+    background:rgba(46,125,246,.08);
+    border-radius:var(--r-md);
+    font-size:14.5px;color:var(--accent-deep);font-weight:700;letter-spacing:-.01em;
+    display:flex;align-items:center;gap:10px;
+  }
+  .why-track-foot .arrow{color:var(--accent);font-weight:700;font-size:16px;}
+  .why-track.parent .why-track-foot{
+    background:rgba(33,200,228,.1);
+    color:#0B6E80;
+  }
+  .why-track.parent .why-track-foot .arrow{color:#0B6E80;}
+
+  /* ---------- REVIEWS ---------- */
+  #reviews{background:var(--paper);}
+  .reviews-grid{
+    display:grid;grid-template-columns:1fr 320px;gap:80px;align-items:center;
+  }
+  .reviews-text .sec-title{font-size:clamp(2rem,3.4vw,2.6rem);}
+  .reviews-text h2 .em{
+    background:var(--grad);-webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;color:transparent;
+  }
+  .reviews-text p.lead{
+    color:var(--ink-2);font-size:16px;line-height:1.8;margin-top:22px;max-width:42ch;
+  }
+  .reviews-hover-note{
+    margin-top:22px;
+    font-size:12.5px;color:var(--ink-3);font-weight:500;letter-spacing:-.005em;
+    display:flex;align-items:center;gap:7px;
+  }
+  .reviews-hover-note::before{
+    content:"";width:5px;height:5px;border-radius:50%;background:var(--ink-3);opacity:.6;
+  }
+
+  /* Reviews phone (large, real images) */
+  .phone-mock{
+    width:320px;height:660px;justify-self:end;
+    border-radius:48px;padding:10px;
+    background:var(--grad);
+    box-shadow:0 32px 64px -22px rgba(28,70,150,.48),0 14px 30px -14px rgba(28,70,150,.3);
+    position:relative;
+  }
+  .phone-mock::before{
+    content:"";position:absolute;top:20px;left:50%;transform:translateX(-50%);
+    width:58px;height:6px;border-radius:999px;background:rgba(255,255,255,.45);z-index:3;
+  }
+  .phone-mock::after{
+    content:"";position:absolute;inset:0;border-radius:48px;pointer-events:none;
+    background:linear-gradient(160deg,rgba(255,255,255,.35) 0%,rgba(255,255,255,0) 38%);
+    mix-blend-mode:overlay;
+  }
+  .phone-screen{
+    width:100%;height:100%;border-radius:38px;
+    background:#EEF1F5;overflow:hidden;position:relative;
+  }
+  .phone-screen::before,.phone-screen::after{
+    content:"";position:absolute;left:0;right:0;height:36px;z-index:2;pointer-events:none;
+  }
+  .phone-screen::before{top:0;background:linear-gradient(180deg,rgba(238,241,245,.95),rgba(238,241,245,0));}
+  .phone-screen::after{bottom:0;background:linear-gradient(0deg,rgba(238,241,245,.95),rgba(238,241,245,0));}
+  .phone-track{
+    display:flex;flex-direction:column;width:100%;
+    will-change:transform;
+    animation:phoneScroll var(--scroll-duration,120s) linear infinite;
+    animation-play-state:paused;
+  }
+  .phone-mock.ready .phone-track{animation-play-state:running;}
+  .phone-mock.ready:hover .phone-track{animation-play-state:paused;}
+  .phone-track img{width:100%;height:auto;display:block;}
+  @keyframes phoneScroll{
+    0%{transform:translateY(0);}
+    100%{transform:translateY(-50%);}
+  }
+
+  /* ---------- FAQ ---------- */
+  #faq{background:var(--bg);}
+  .faq-grid{display:grid;grid-template-columns:1fr 1.6fr;gap:80px;align-items:start;}
+  .faq-head .sec-title{margin-bottom:16px;}
+  .faq-head p{color:var(--ink-2);font-size:15.5px;line-height:1.75;}
+  .faq-list{display:flex;flex-direction:column;gap:12px;}
+  .faq-item{
+    background:#fff;border-radius:var(--r-md);
+    box-shadow:0 2px 12px -4px rgba(28,70,150,.06);
+    overflow:hidden;transition:box-shadow .3s ease;
+  }
+  .faq-item.open{box-shadow:var(--shadow-soft);}
+  .faq-q{
+    width:100%;background:none;border:none;cursor:pointer;
+    padding:22px 26px;display:flex;align-items:center;justify-content:space-between;gap:16px;
+    text-align:left;font-family:inherit;
+  }
+  .faq-q h4{
+    font-size:16px;font-weight:600;color:var(--ink);letter-spacing:-.015em;line-height:1.4;
+  }
+  .faq-toggle{
+    width:28px;height:28px;border-radius:50%;background:var(--bg);
+    flex-shrink:0;position:relative;transition:background .3s ease;
+  }
+  .faq-item.open .faq-toggle{background:var(--accent);}
+  .faq-toggle::before,.faq-toggle::after{
+    content:"";position:absolute;background:var(--accent);
+    transition:transform .35s ease,background .3s ease;
+  }
+  .faq-item.open .faq-toggle::before,.faq-item.open .faq-toggle::after{background:#fff;}
+  .faq-toggle::before{left:8px;right:8px;top:50%;height:2px;transform:translateY(-50%);}
+  .faq-toggle::after{top:8px;bottom:8px;left:50%;width:2px;transform:translateX(-50%);}
+  .faq-item.open .faq-toggle::after{transform:translateX(-50%) scaleY(0);}
+  .faq-a{
+    max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.4,0,.2,1);
+  }
+  .faq-a-inner{padding:0 26px 26px;color:var(--ink-2);font-size:14.5px;line-height:1.75;}
+  .faq-a-inner a{color:var(--accent-deep);text-decoration:underline;text-underline-offset:3px;font-weight:600;}
+
+  /* ---------- INQUIRY MAP ---------- */
+  #inquiry{
+    background:radial-gradient(900px 600px at 90% -5%,rgba(61,139,255,.18),transparent 70%),
+               radial-gradient(800px 700px at -5% 105%,rgba(52,210,222,.14),transparent 70%),
+               #ffffff;
+  }
+  .map-head{display:flex;align-items:end;justify-content:space-between;gap:40px;margin-bottom:48px;}
+  .map-head .sec-title{max-width:18ch;}
+  .map-meta{display:flex;gap:14px;}
+  .map-meta .pill{
+    background:#fff;border-radius:var(--r-md);padding:16px 24px;
+    box-shadow:var(--shadow-soft);text-align:center;
+    transition:transform .3s ease,box-shadow .3s ease;
+  }
+  .map-meta .pill:hover{transform:translateY(-3px);box-shadow:var(--shadow-card);}
+  .map-meta .pill .v{
+    font-size:24px;font-weight:700;line-height:1;
+    background:var(--grad);-webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;color:transparent;
+  }
+  .map-meta .pill .l{font-size:11.5px;color:var(--ink-2);margin-top:6px;font-weight:500;}
+  /* Primary stat — gradient fill emphasis */
+  .map-meta .pill.primary{
+    background:var(--grad);
+    box-shadow:0 14px 30px -10px rgba(46,125,246,.4);
+  }
+  .map-meta .pill.primary:hover{
+    box-shadow:0 20px 40px -10px rgba(46,125,246,.55);
+  }
+  .map-meta .pill.primary .v{
+    background:none;-webkit-text-fill-color:#fff;color:#fff;
+  }
+  .map-meta .pill.primary .l{color:rgba(255,255,255,.9);}
+
+  .map-section{display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:center;}
+  .map-container{
+    background:#fff;border-radius:var(--r-lg);padding:32px;
+    box-shadow:var(--shadow-soft);
+    position:relative;
+  }
+  .map-svg{width:100%;height:auto;display:block;}
+  .map-region{
+    fill:#DCE5F2;stroke:#fff;stroke-width:2;
+    cursor:pointer;transition:fill .3s ease,filter .3s ease;
+  }
+  .map-region:hover,.map-region.active{
+    fill:url(#mapGrad);
+    filter:drop-shadow(0 6px 14px rgba(46,125,246,.35));
+  }
+  .map-region.prep{fill:#EEF1F6;}
+  .map-region.prep:hover,.map-region.prep.active{
+    fill:#CFD8E7;filter:drop-shadow(0 4px 10px rgba(28,70,150,.15));
+  }
+  .map-label{font-size:12px;fill:var(--ink-2);font-weight:600;pointer-events:none;text-anchor:middle;}
+  .map-region.active+.map-label,.map-region:hover+.map-label{fill:#fff;}
+  .map-legend{display:flex;gap:18px;margin-top:18px;font-size:11.5px;color:var(--ink-2);font-weight:500;}
+  .map-legend-item{display:flex;align-items:center;gap:7px;}
+  .map-legend-item .sw{width:18px;height:10px;border-radius:4px;}
+  .map-legend-item .sw.op{background:var(--grad);}
+  .map-legend-item .sw.prep{background:#EEF1F6;border:1px solid #DCE5F2;}
+
+  .region-list{display:flex;flex-direction:column;gap:10px;}
+  .region-row{
+    background:#fff;border-radius:var(--r-md);padding:18px 22px;
+    box-shadow:0 2px 12px -4px rgba(28,70,150,.06);
+    display:flex;align-items:center;justify-content:space-between;
+    transition:transform .25s ease,box-shadow .25s ease;cursor:pointer;
+  }
+  .region-row:hover,.region-row.active{
+    transform:translateX(6px);box-shadow:var(--shadow-soft);
+  }
+  .region-row.active{background:#F7FAFF;}
+  .region-row .name{font-size:14.5px;font-weight:600;color:var(--ink);}
+  .region-row .vol{font-size:14px;font-weight:700;color:var(--accent-deep);}
+  .region-row .vol em{font-size:11.5px;color:var(--ink-2);font-style:normal;margin-left:3px;font-weight:500;}
+  .region-row.prep .vol{color:var(--ink-2);}
+
+  /* ---------- APPLY ---------- */
+  #apply{background:var(--bg);}
+  .apply-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:80px;align-items:center;}
+  .apply-text .sec-title{margin-bottom:16px;}
+  .apply-text p.lead{
+    color:var(--ink-2);font-size:16px;line-height:1.8;margin-bottom:36px;max-width:30ch;
+  }
+  .apply-contact{display:flex;flex-direction:column;}
+  .apply-contact .row{
+    display:grid;grid-template-columns:80px 1fr;gap:18px;align-items:baseline;
+    padding:18px 0;border-top:1px solid var(--line);
+  }
+  .apply-contact .row:first-child{padding-top:0;border-top:none;}
+  .apply-contact .row:last-child{padding-bottom:0;}
+  .apply-contact .row .k{
+    font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-3);font-weight:600;
+  }
+  .apply-contact .row .v{font-size:14.5px;color:var(--ink);font-weight:500;}
+  .apply-contact .row .v a{color:inherit;border-bottom:1px solid var(--line);}
+  .apply-contact .row .v a:hover{color:var(--accent-deep);border-bottom-color:var(--accent);}
+
+  .apply-form-card{
+    background:#fff;border-radius:var(--r-lg);padding:48px 44px;
+    box-shadow:var(--shadow-float);
+  }
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;}
+  .form-field{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;}
+  .form-field label{
+    font-size:12.5px;font-weight:600;color:var(--ink);letter-spacing:-.005em;
+  }
+  .form-field label .hint{color:var(--ink-3);font-weight:400;margin-left:6px;font-size:12px;}
+  .form-field input,.form-field textarea{
+    width:100%;padding:14px 16px;background:#F8FAFC;
+    border:1px solid var(--line);border-radius:var(--r-sm);
+    font-family:inherit;font-size:14.5px;color:var(--ink);
+    transition:border-color .2s ease,background .2s ease,box-shadow .2s ease;
+  }
+  .form-field input::placeholder,.form-field textarea::placeholder{color:var(--ink-3);}
+  .form-field input:focus,.form-field textarea:focus{
+    outline:none;background:#fff;border-color:var(--accent);
+    box-shadow:0 0 0 4px rgba(46,125,246,.12);
+  }
+  .form-field textarea{min-height:100px;resize:vertical;}
+  .form-checks{display:flex;flex-wrap:wrap;gap:8px;}
+  .form-check{
+    display:inline-flex;align-items:center;gap:7px;
+    padding:9px 14px;border-radius:var(--r-pill);
+    background:var(--bg);font-size:13px;color:var(--ink);font-weight:500;
+    cursor:pointer;transition:background .2s ease,color .2s ease;
+  }
+  .form-check input{display:none;}
+  .form-check:hover{background:var(--bg-deep);}
+  .form-check input:checked+.form-check-text{color:#fff;}
+  .form-check:has(input:checked){background:var(--accent);color:#fff;}
+  .form-submit{
+    width:100%;padding:18px;font-size:16px;margin-top:10px;
+  }
+  .apply-parent-outlink{
+    text-align:center;margin-top:18px;font-size:13px;color:var(--ink-2);
+  }
+  .apply-parent-outlink a{
+    color:var(--accent-deep);text-decoration:underline;text-underline-offset:3px;font-weight:600;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    background:var(--dark);color:rgba(255,255,255,.6);
+    padding:60px 0 36px;
+  }
+  .foot-grid{
+    display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;
+  }
+  .foot-brand{display:flex;align-items:center;gap:10px;}
+  .foot-logo{height:26px;width:auto;display:block;filter:brightness(0) invert(1);opacity:.9;}
+  .foot-brand small{
+    font-size:11.5px;color:rgba(255,255,255,.5);font-weight:500;
+    padding-left:12px;margin-left:4px;border-left:1px solid rgba(255,255,255,.14);
+  }
+  .foot-menu{display:flex;gap:28px;list-style:none;flex-wrap:wrap;}
+  .foot-menu a{
+    font-size:13.5px;color:rgba(255,255,255,.65);font-weight:500;transition:color .2s ease;
+  }
+  .foot-menu a:hover{color:#9FB7FF;}
+  .foot-menu a.parent-link{color:#9FB7FF;}
+  .foot-bottom{
+    margin-top:32px;padding-top:24px;border-top:1px solid rgba(255,255,255,.08);
+    display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+    font-size:12px;color:rgba(255,255,255,.45);
+  }
+  .foot-bottom .biz{font-size:12px;}
+
+  /* ---------- STICKY CTA BAR ---------- */
+  .sticky-cta{
+    position:fixed;bottom:24px;left:50%;transform:translate(-50%,calc(100% + 40px));
+    z-index:90;
+    background:rgba(20,40,68,.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    border-radius:var(--r-pill);
+    padding:10px 12px 10px 28px;
+    display:flex;align-items:center;gap:22px;
+    box-shadow:0 24px 50px -16px rgba(0,0,0,.4);
+    transition:transform .45s cubic-bezier(.4,0,.2,1);
+  }
+  .sticky-cta.visible{transform:translate(-50%,0);}
+  .sticky-cta .live-dot{width:7px;height:7px;}
+  .sticky-cta .label{
+    color:#fff;font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px;
+  }
+  .sticky-cta .label strong{font-weight:700;}
+  .sticky-cta .btn{padding:11px 22px;font-size:13.5px;}
+
+  /* ---------- REVEAL ---------- */
+  .reveal{
+    opacity:0;transform:translateY(28px);
+    transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1);
+  }
+  .reveal.in{opacity:1;transform:none;}
+  .delay-1{transition-delay:.1s;}
+  .delay-2{transition-delay:.2s;}
+  .delay-3{transition-delay:.3s;}
+  .delay-4{transition-delay:.4s;}
+
+  /* ---------- HAMBURGER MENU (mobile only) ---------- */
+  .nav-toggle{
+    display:none;
+    width:44px;height:44px;border:none;background:transparent;
+    cursor:pointer;padding:0;position:relative;
+    flex-direction:column;align-items:center;justify-content:center;gap:5px;
+  }
+  .nav-toggle span{
+    display:block;width:22px;height:2px;background:var(--ink);border-radius:2px;
+    transition:transform .3s ease,opacity .25s ease;
+  }
+  .nav-toggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .nav-toggle.open span:nth-child(2){opacity:0;}
+  .nav-toggle.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+  .nav-backdrop{
+    display:none;position:fixed;inset:0;z-index:99;
+    background:transparent;
+    opacity:0;pointer-events:none;transition:opacity .3s ease;
+  }
+  .nav-backdrop.visible{opacity:1;pointer-events:auto;}
+
+  .nav-close{
+    display:none;position:absolute;top:18px;right:20px;
+    width:32px;height:32px;border:none;background:transparent;
+    cursor:pointer;padding:0;flex-direction:column;align-items:center;justify-content:center;gap:0;
+  }
+  .nav-close span{
+    display:block;width:20px;height:2px;background:var(--ink);border-radius:2px;
+    position:absolute;transition:transform .3s ease;
+  }
+  .nav-close span:nth-child(1){transform:rotate(45deg);}
+  .nav-close span:nth-child(2){transform:rotate(-45deg);}
+
+  body.nav-open{overflow:hidden;}
+
+  /* ============================================================
+     RESPONSIVE — TABLET (≤1024px)
+     Mobile-first restructure begins here. Important: this is where
+     hamburger NAV, sticky-cta bottom bar, and single-column stacks
+     all activate. !important is used on layout-critical props to
+     defeat any cached stylesheet conflicts.
+  ============================================================ */
+  @media (max-width: 1024px){
+    :root{
+      --sec-py:80px !important;
+      --wrap:100% !important;
+    }
+    body{overflow-x:hidden;}
+    .wrap{padding:0 24px !important;}
+    .sec-title{font-size:clamp(1.7rem,4.6vw,2.2rem) !important;line-height:1.25;}
+    .sec-sub{font-size:15px;}
+
+    /* NAV — true hamburger mode */
+    header{
+      padding:12px 0 !important;
+      position:fixed !important;top:0;left:0;right:0;
+      z-index:99;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.04);
+      transform:translateY(0);transition:transform 0.3s ease;
+    }
+    header.scrolled{padding:10px 0 !important;}
+    header.hide-on-scroll{transform:translateY(-100%);}
+    .brand small{display:none !important;}
+    .brand-logo{height:28px;}
+    .nav-cta{display:none !important;}
+    .nav-toggle{display:flex !important;}
+    .nav-close{display:flex !important;position:relative !important;top:0 !important;right:0 !important;margin-bottom:12px !important;}
+    .nav-links{
+      position:fixed !important;inset:0 0 0 auto !important;
+      width:280px !important;height:100vh !important;z-index:100 !important;
+      background:#fff !important;box-shadow:-2px 0 12px rgba(0,0,0,.08) !important;
+      display:flex !important;flex-direction:column !important;padding:24px !important;gap:0 !important;
+      transform:translateX(100%) !important;transition:transform .3s ease !important;
+    }
+    .nav-links.open{transform:translateX(0) !important;}
+    .nav-links ul{display:flex !important;flex-direction:column !important;list-style:none !important;gap:0 !important;}
+    .nav-links li{width:100%;border-bottom:1px solid var(--line) !important;margin:0 !important;}
+    .nav-links li:last-child{border-bottom:none !important;}
+    .nav-links a{display:block !important;padding:18px 0;font-size:15px;font-weight:500;color:var(--ink) !important;}
+    .nav-backdrop{
+      display:block !important;position:fixed !important;inset:0 !important;z-index:99 !important;
+      background:transparent !important;opacity:0 !important;
+      pointer-events:none !important;transition:opacity .3s ease !important;
+    }
+    .nav-backdrop.visible{opacity:1 !important;pointer-events:auto !important;}
+
+    /* HERO — centered, single column */
+    .hero{padding:110px 0 0 !important;}
+    .hero-grid{display:block !important;min-height:auto;}
+    .hero-text{max-width:100% !important;text-align:center;}
+    .hero h1{
+      font-size:clamp(1.9rem,5.4vw,2.6rem) !important;
+      line-height:1.22 !important;letter-spacing:-.025em;text-align:center;
+    }
+    .hero h1 br{display:block !important;} /* 모바일에서 보이기 */
+    .hero-sub{
+      font-size:15.5px !important;line-height:1.6;max-width:100% !important;
+      margin-left:auto !important;margin-right:auto !important;
+    }
+    .hero-sub br{display:none !important;}
+    .hero-sub strong{display:inline;}
+    .hero-lead{font-size:13px;margin-bottom:28px;}
+    .hero-actions{width:100% !important;justify-content:center !important;}
+    .hero-actions .btn-primary-lg{padding:16px 28px;font-size:15px;}
+
+    /* Hero proof — stacked */
+    .hero-proof{margin-top:48px;padding:18px 0;}
+    .hero-proof-inner{
+      flex-direction:column !important;align-items:center !important;
+      gap:12px !important;padding:0 24px !important;
+    }
+    .hero-proof-headline{font-size:13px;line-height:1.5;}
+    .hero-proof-marquee{width:100%;}
+    .hero-proof-track{gap:28px !important;animation-duration:24s !important;}
+    .hero-proof-track .academy{font-size:14px;gap:7px;}
+    .hero-proof-track .academy .mark{width:24px;height:24px;}
+
+    /* ABOUT — single column, simplified graphic */
+    .about-grid{grid-template-columns:1fr !important;gap:40px !important;}
+    .about-content{order:1;}
+    .about-graphic{order:2;}
+    .about-content .sec-title{
+      font-size:clamp(1.85rem,5.2vw,2.3rem) !important;margin-bottom:18px;
+    }
+    .about-subtext{font-size:15px;line-height:1.7;margin-bottom:28px;}
+    .about-subtext br{display:none !important;}
+    .about-stats-2x2{
+      grid-template-columns:repeat(2,1fr) !important;gap:10px !important;
+      max-width:none !important;
+    }
+    .stat-card{padding:22px 18px;}
+    .stat-card .v{font-size:28px;}
+    .stat-card .l{font-size:12.5px;}
+    /* About graphic — keep but downscaled */
+    .about-graphic{
+      height:420px !important;max-width:420px !important;
+      margin:0 auto !important;
+    }
+    .ag-orbits{width:360px !important;height:360px !important;}
+    .match-badge{width:112px !important;height:112px !important;}
+    .match-badge .v{font-size:36px !important;}
+    .match-badge .l{font-size:10.5px;}
+    .persona-card{width:220px !important;padding:16px 18px;}
+    .persona-card.parent{top:16px;left:0;}
+    .persona-card.academy{bottom:16px;right:0;}
+    .ag-badge.b1{top:2%;right:2%;}
+    .ag-badge.b4{top:6%;left:0;}
+    .ag-badge.b2{bottom:12%;right:0;}
+    .ag-badge.b3{bottom:16%;left:0;}
+
+    /* HOW IT WORKS — 1 column on mobile-first */
+    .how-head{margin-bottom:40px;}
+    .how-steps-row{grid-template-columns:1fr !important;gap:14px !important;}
+    .how-steps-row::before{display:none !important;}
+    .how-step{padding:24px 22px;}
+
+    /* WHY — true 1 column */
+    .why-head{margin-bottom:48px;}
+    .why-head .why-big-num{
+      font-size:clamp(4rem,16vw,5.5rem) !important;margin:18px 0 14px;
+    }
+    .why-head .sec-title{font-size:clamp(1.5rem,4.6vw,2rem) !important;}
+    .why-head .why-sub{font-size:14.5px;}
+    .why-tracks{grid-template-columns:1fr !important;gap:18px !important;}
+    .why-track{padding:28px 22px;}
+
+    /* REVIEWS — stack */
+    .reviews-grid{
+      grid-template-columns:1fr !important;gap:36px !important;
+      justify-items:center;
+    }
+    .reviews-text{text-align:center;width:100%;max-width:560px;}
+    .reviews-text p.lead{margin:22px auto 0;font-size:14.5px;}
+    .reviews-hover-note{justify-content:center;}
+    .phone-mock{
+      width:260px !important;height:540px !important;
+      justify-self:center;border-radius:42px;padding:9px;
+    }
+    .phone-mock::before{width:48px;}
+    .phone-screen{border-radius:34px;}
+
+    /* FAQ — stack */
+    .faq-grid{grid-template-columns:1fr !important;gap:28px !important;}
+    .faq-head .sec-title{margin-bottom:10px;}
+    .faq-q{padding:18px 20px;}
+    .faq-q h4{font-size:14.5px;}
+    .faq-a-inner{padding:0 20px 22px;font-size:13.5px;}
+
+    /* INQUIRY MAP */
+    .map-head{
+      flex-direction:column !important;align-items:flex-start !important;
+      gap:20px !important;margin-bottom:32px;
+    }
+    .map-meta{
+      width:100%;display:grid !important;
+      grid-template-columns:repeat(2,1fr) !important;gap:10px !important;
+    }
+    .map-meta .pill{padding:16px 14px;}
+    .map-meta .pill .v{font-size:22px;}
+    .map-section{grid-template-columns:1fr !important;gap:24px !important;}
+    .map-container{padding:20px;}
+
+    /* APPLY — stack */
+    .apply-grid{grid-template-columns:1fr !important;gap:32px !important;}
+    .apply-text{text-align:center;}
+    .apply-text p.lead{margin:0 auto 30px;font-size:15px;}
+    .apply-contact{max-width:420px;margin:0 auto;}
+    .apply-contact .row{
+      grid-template-columns:72px 1fr;gap:14px;padding:14px 0;
+    }
+    .apply-form-card{padding:32px 24px !important;}
+    .form-row{grid-template-columns:1fr !important;gap:0 !important;margin-bottom:0 !important;}
+    .form-checks{gap:6px;}
+    .form-check{padding:8px 12px;font-size:12.5px;}
+    .form-submit{padding:16px;font-size:15px;}
+
+    /* FOOTER */
+    footer{padding:44px 0 26px;}
+    .foot-grid{
+      flex-direction:column !important;align-items:flex-start !important;
+      gap:20px !important;
+    }
+    .foot-menu{gap:18px;}
+    .foot-bottom{
+      flex-direction:column !important;align-items:flex-start !important;
+      gap:8px !important;font-size:11.5px !important;
+    }
+
+    /* STICKY CTA — full-width bottom bar, centered label */
+    .sticky-cta{
+      left:12px !important;right:12px !important;bottom:12px !important;
+      width:auto !important;max-width:none !important;
+      transform:translateY(calc(100% + 32px));
+      padding:10px 12px !important;gap:10px !important;
+      border-radius:16px !important;
+      justify-content:space-between !important;
+    }
+    .sticky-cta.visible{transform:translateY(0) !important;}
+    .sticky-cta .label{
+      font-size:13px !important;flex:1;
+      display:flex !important;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:2px !important;
+      text-align:center;
+    }
+    .sticky-cta .label strong{display:inline !important;}
+    .sticky-cta .btn{
+      padding:11px 18px !important;font-size:12.5px !important;
+      flex-shrink:0;
+    }
+  }
+
+  /* ============================================================
+     RESPONSIVE — MOBILE (≤640px)
+     Hide decorative orbital graphic, simplify sticky CTA label,
+     remove br-forced line breaks everywhere.
+  ============================================================ */
+  @media (max-width: 640px){
+    :root{
+      --sec-py:64px !important;
+      --r-lg:18px;
+      --r-card:16px;
+    }
+    .wrap{padding:0 18px !important;}
+
+    /* Force-disable ANY <br> within content text on mobile —
+       they're for desktop typography, not mobile flow */
+    .hero-sub br,
+    .about-subtext br,
+    .reviews-text p br,
+    .apply-text p br{display:none !important;}
+
+    /* HERO — mobile-optimized structure */
+    .hero{padding:80px 0 0 !important;}
+    .hero-eyebrow{padding:5px 11px;margin-bottom:14px;}
+    .hero-eyebrow .kicker{font-size:10.5px;letter-spacing:.08em;}
+    .hero h1{
+      font-size:clamp(1.65rem,6.8vw,2rem) !important;
+      line-height:1.28 !important;margin-bottom:14px;
+    }
+    .hero-sub{font-size:13.5px !important;line-height:1.6;margin-bottom:12px;}
+    .hero-lead{font-size:12px;margin-bottom:20px;color:var(--ink-2);}
+    .hero-actions .btn-primary-lg{
+      width:100%;padding:14px 20px;font-size:14px;
+      margin-bottom:32px;
+    }
+    .hero-proof{margin-top:36px;padding:16px 0;}
+    .hero-proof-inner{padding:0 18px !important;gap:10px !important;}
+    .hero-proof-headline{font-size:12px;}
+    .hero-proof-track .academy{font-size:13px;}
+    .hero-proof-track .academy .mark{width:20px;height:20px;}
+
+    /* ABOUT — hide decorative cards & dots, keep only orbital + center badge */
+    .about-content .sec-title{font-size:clamp(1.65rem,6.5vw,2rem) !important;}
+    .about-subtext{font-size:14px;margin-bottom:24px;}
+    .stat-card{padding:18px 14px;}
+    .stat-card .v{font-size:24px;}
+    .stat-card .l{font-size:11.5px;}
+    .about-graphic{
+      height:300px !important;max-width:320px !important;
+    }
+    .ag-orbits{width:280px !important;height:280px !important;}
+    .match-badge{width:104px !important;height:104px !important;}
+    .match-badge .v{font-size:32px !important;}
+    /* Hide persona cards & floating badges on mobile — too much for narrow viewport */
+    .persona-card,
+    .ag-badge,
+    .ag-dot{display:none !important;}
+    .about-graphic::before,
+    .about-graphic::after{display:none;}
+
+    /* HOW */
+    .how-head{margin-bottom:32px;}
+    .how-step{padding:22px 20px;}
+    .how-step .icon{width:44px;height:44px;margin-bottom:14px;}
+    .how-step .icon svg{width:22px;height:22px;}
+    .how-step h3{font-size:16px;}
+    .how-step p{font-size:13px;margin-bottom:12px;}
+
+    /* WHY */
+    .why-head{margin-bottom:36px;}
+    .why-track{padding:24px 20px;}
+    .why-track-head{gap:10px;padding-bottom:16px;margin-bottom:16px;}
+    .why-track-head .badge{width:38px;height:38px;}
+    .why-track-head h3{font-size:16px;}
+    .why-item{padding:14px 14px;}
+    .why-item h4{font-size:14px;}
+    .why-item p{font-size:12.5px;}
+    .why-track-foot{padding:12px 14px;font-size:13px;}
+
+    /* REVIEWS */
+    .phone-mock{width:240px !important;height:500px !important;border-radius:38px !important;padding:8px;}
+    .phone-mock::before{width:44px;}
+    .phone-screen{border-radius:30px;}
+
+    /* INQUIRY */
+    .map-meta .pill{padding:14px 12px;}
+    .map-meta .pill .v{font-size:20px;}
+    .map-meta .pill .l{font-size:11px;}
+    .map-container{padding:18px;}
+    .region-row{padding:13px 16px;}
+    .region-row .name{font-size:13.5px;}
+
+    /* APPLY */
+    .apply-contact{max-width:360px;}
+    .apply-contact .row{grid-template-columns:68px 1fr;padding:13px 0;}
+    .apply-contact .row .k{font-size:11px;letter-spacing:.1em;}
+    .apply-contact .row .v{font-size:14px;}
+    .apply-form-card{padding:28px 20px !important;}
+    .form-field input,.form-field textarea{padding:13px 14px;font-size:14px;}
+    .form-check{padding:8px 11px;font-size:12px;}
+
+    /* STICKY CTA at ≤640 — center-aligned label + button */
+    .sticky-cta{
+      left:10px !important;right:10px !important;bottom:10px !important;
+      padding:10px 12px !important;gap:8px !important;
+      border-radius:14px !important;
+      justify-content:space-between !important;
+    }
+    .sticky-cta .label{
+      font-size:12px !important;
+      text-align:center;
+      white-space:nowrap !important;
+      overflow:hidden !important;
+      text-overflow:ellipsis !important;
+    }
+    .sticky-cta .label strong{display:inline !important;}
+    .sticky-cta .btn{padding:10px 14px !important;font-size:12px !important;flex-shrink:0;}
+  }
+
+  /* ============================================================
+     RESPONSIVE — SMALL MOBILE (≤420px)
+     iPhone SE / Galaxy S8 territory.
+  ============================================================ */
+  @media (max-width: 420px){
+    :root{--sec-py:56px !important;}
+    .wrap{padding:0 14px !important;}
+
+    .hero{padding:88px 0 0 !important;}
+    .hero h1{font-size:clamp(1.6rem,8vw,1.95rem) !important;}
+    .hero-sub{font-size:14px !important;}
+
+    .about-graphic{height:260px !important;max-width:280px !important;}
+    .ag-orbits{width:240px !important;height:240px !important;}
+    .match-badge{width:92px !important;height:92px !important;}
+    .match-badge .v{font-size:28px !important;}
+    .match-badge .l{font-size:9.5px !important;}
+
+    .about-stats-2x2{gap:8px !important;}
+    .stat-card{padding:16px 12px;}
+    .stat-card .v{font-size:22px;}
+    .stat-card .l{font-size:11px;}
+
+    .how-step{padding:20px 18px;}
+    .how-step h3{font-size:15.5px;}
+
+    .why-head .why-big-num{font-size:clamp(3.5rem,18vw,4.5rem) !important;}
+
+    .phone-mock{width:220px !important;height:460px !important;border-radius:34px !important;}
+    .phone-mock::before{width:40px;height:5px;}
+    .phone-screen{border-radius:28px;}
+
+    .map-meta .pill{padding:12px 10px;}
+    .apply-form-card{padding:22px 16px !important;}
+    .apply-contact .row{grid-template-columns:60px 1fr;}
+
+    /* Sticky CTA at ≤420px — natural wrapping */
+    .sticky-cta{
+      padding:8px !important;
+      justify-content:space-between !important;
+      text-align:center;
+    }
+    .sticky-cta .label{
+      text-align:center;
+      color:#fff;
+      flex:1;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .sticky-cta .label strong{display:inline !important;color:#fff;}
+    .sticky-cta .btn{
+      padding:12px 16px !important;font-size:13px !important;
+      flex-shrink:0;
+    }
+  }
+
+  /* ============================================================
+     EXTRA SMALL MOBILE (≤375px)
+     iPhone 12/13 territory. Force single-line text.
+  ============================================================ */
+  @media (max-width: 375px){
+    .sticky-cta .label{
+      white-space:nowrap !important;
+      overflow:hidden !important;
+      text-overflow:ellipsis !important;
+    }
+  }
+
+  /* ============================================================
+     SAFARI/iOS — disable hover-only behaviors on touch
+  ============================================================ */
+  @media (hover: none){
+    .hero-proof-marquee:hover .hero-proof-track{opacity:.5;filter:grayscale(1);animation-play-state:running;}
+    .phone-mock.ready:hover .phone-track{animation-play-state:running;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header id="hdr">
+  <div class="wrap nav">
+    <a href="#top" class="brand" aria-label="CLIPEDU 홈">
+      <img src="assets/clipedu-logo.png" alt="CLIPEDU" class="brand-logo">
+      <small>원생매칭 플랫폼</small>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <button class="nav-close" id="navClose" aria-label="메뉴 닫기">
+        <span></span>
+        <span></span>
+      </button>
+      <ul>
+        <li><a href="#about">서비스</a></li>
+        <li><a href="#how">매칭 과정</a></li>
+        <li><a href="#reviews">후기</a></li>
+      </ul>
+    </nav>
+    <a href="#apply" class="btn btn-primary nav-cta">원생 매칭 신청</a>
+    <button class="nav-toggle" id="navToggle" aria-label="메뉴 열기" aria-expanded="false" aria-controls="navLinks">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+<div class="nav-backdrop" id="navBackdrop" aria-hidden="true"></div>
+
+<a id="top"></a>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-text">
+        <div class="hero-eyebrow reveal">
+          <span class="kicker">2026 · 원생매칭 플랫폼</span>
+        </div>
+        <h1 class="reveal delay-1">
+          원생 <span class="text-gradient">유지</span>, 자신 있으신가요?<br>
+          원생 <span class="text-gradient">유입</span>은 우리가 할게요!
+        </h1>
+        <p class="hero-sub reveal delay-2">
+          전국 <strong>매달 8,500명 학부모</strong>의 문의를 검증해<br>우리 학원에 딱 맞는 원생만 연결해 드립니다.
+        </p>
+        <p class="hero-lead reveal delay-2">교육사업 16년 노하우, 원생 유입은 전문가에게 맡겨보세요.</p>
+        <div class="hero-actions reveal delay-3">
+          <a href="#apply" class="btn btn-primary btn-primary-lg">
+            원생 매칭 신청하기 <span class="arrow">→</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <!-- Proof Strip (Hero 하단 · full-bleed marquee) -->
+  <div class="hero-proof reveal">
+    <div class="hero-proof-inner">
+      <div class="hero-proof-headline">
+        이미 <span class="em">480곳 학원</span>이 매달 <span class="em">8,500명 학부모</span>와 만나고 있어요
+      </div>
+      <div class="hero-proof-marquee">
+        <div class="hero-proof-track">
+          <!-- Set 1 -->
+          <span class="academy"><span class="mark sq"></span>에듀플러스</span>
+          <span class="academy"><span class="mark round"></span>명문학원</span>
+          <span class="academy"><span class="mark diamond"></span>정석수학</span>
+          <span class="academy"><span class="mark lg"></span>하이스트</span>
+          <span class="academy"><span class="mark sm"></span>YBM어학원</span>
+          <span class="academy"><span class="mark sq"></span>대치프리미엄</span>
+          <!-- Set 2 (duplicate for seamless loop) -->
+          <span class="academy"><span class="mark sq"></span>에듀플러스</span>
+          <span class="academy"><span class="mark round"></span>명문학원</span>
+          <span class="academy"><span class="mark diamond"></span>정석수학</span>
+          <span class="academy"><span class="mark lg"></span>하이스트</span>
+          <span class="academy"><span class="mark sm"></span>YBM어학원</span>
+          <span class="academy"><span class="mark sq"></span>대치프리미엄</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 01 ABOUT — 2-col: text(L) + V2 persona graphic(R) ============ -->
+<section id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <!-- LEFT: header + subtext + 2x2 stats -->
+      <div class="about-content reveal">
+        <div class="sec-label about-label">01 · ABOUT</div>
+        <h2 class="sec-title">학원 찾는 시간,<br>이제 <span class="text-gradient">데이터</span>가 줄여드립니다</h2>
+        <p class="about-subtext">
+          통학 거리, 예산, 커리큘럼, 선생님 스타일까지.<br>
+          학부모가 진짜 궁금해하는 기준 <strong>30가지</strong>를 데이터로 분석해<br>
+          가장 잘 맞는 교육기관을 찾아드립니다.
+        </p>
+        <div class="about-stats-2x2">
+          <div class="stat-card"><div class="v">60,000+</div><div class="l">누적 매칭 건수</div></div>
+          <div class="stat-card"><div class="v">1,200+</div><div class="l">제휴 교육기관</div></div>
+          <div class="stat-card"><div class="v">98%</div><div class="l">매칭 만족도</div></div>
+          <div class="stat-card"><div class="v">24h</div><div class="l">평균 매칭 응답</div></div>
+        </div>
+      </div>
+
+      <!-- RIGHT: V2 persona storytelling graphic -->
+      <div class="about-graphic reveal delay-1" aria-hidden="true">
+        <!-- Rotating dashed orbit rings (background layer) -->
+        <div class="ag-orbits">
+          <svg viewBox="0 0 500 500">
+            <circle class="ring ring-1" cx="250" cy="250" r="90"/>
+            <circle class="ring ring-2" cx="250" cy="250" r="160"/>
+            <circle class="ring ring-3" cx="250" cy="250" r="225"/>
+          </svg>
+        </div>
+
+        <!-- Floating real-time data badges (4 quadrants) -->
+        <div class="ag-badge b1">송파구 매칭 분석</div>
+        <div class="ag-badge b2">강남구 매칭 완료</div>
+        <div class="ag-badge b3">성남시 상담 예약</div>
+        <div class="ag-badge b4">분당 상담 예약</div>
+
+        <!-- Pulse dots at orbit points (data flow signals) -->
+        <span class="ag-dot d1"></span>
+        <span class="ag-dot d2"></span>
+        <span class="ag-dot d3"></span>
+
+        <!-- Center match core (circular, orbital anchor) -->
+        <div class="match-badge">
+          <div class="v">98<span class="pct">%</span></div>
+          <div class="l">매칭 적합도</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 HOW IT WORKS (Sticky) ============ -->
+<section id="how">
+  <div class="wrap">
+    <div class="how-head reveal">
+      <div class="sec-label how-label">02 · HOW IT WORKS</div>
+      <h2 class="sec-title">학부모 신청부터 학원 매칭까지,<br>4단계로 진행됩니다</h2>
+      <p class="sec-sub">매칭부서가 학부모와 학원 사이의 모든 단계를 대신 처리합니다.</p>
+    </div>
+
+    <div class="how-steps-row">
+      <!-- Step 1: 조건 입력 (document form) -->
+      <div class="how-step reveal delay-1" data-step="1">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="9" y1="13" x2="15" y2="13"/>
+            <line x1="9" y1="17" x2="13" y2="17"/>
+          </svg>
+        </div>
+        <div class="step-meta">
+          <span class="num">01</span>
+          <span class="tag">학부모 신청</span>
+        </div>
+        <h3>조건 입력</h3>
+        <p>학부모가 학년·과목·예산·이동 조건을 5분 안에 입력합니다.</p>
+        <span class="time-chip">5분 내</span>
+      </div>
+
+      <!-- Step 2: 매칭 엔진 (search + sparkle) -->
+      <div class="how-step reveal delay-2" data-step="2">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            <path d="M11 7.5L11.6 9L13 9.6L11.6 10.1L11 11.5L10.4 10.1L9 9.6L10.4 9Z" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
+        <div class="step-meta">
+          <span class="num">02</span>
+          <span class="tag">매칭 엔진</span>
+        </div>
+        <h3>조건에 맞는 학원만 매칭</h3>
+        <p>매칭 엔진이 조건이 맞는 학원만 추천합니다. 대기 시 새 학원 등록 즉시 재상담합니다.</p>
+        <span class="time-chip">즉시</span>
+      </div>
+
+      <!-- Step 3: 시간 조율 (calendar + check) -->
+      <div class="how-step reveal delay-3" data-step="3">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <polyline points="9 15 11 17 15 13"/>
+          </svg>
+        </div>
+        <div class="step-meta">
+          <span class="num">03</span>
+          <span class="tag">매칭부서 대행</span>
+        </div>
+        <h3>시간 조율</h3>
+        <p>학부모-원장님 사이 시간 조율을 매칭부서가 대신 처리해요. 학원은 수업에만 집중하세요.</p>
+        <span class="time-chip">24시간 내</span>
+      </div>
+
+      <!-- Step 4: 피드백 공유 (chat + check) -->
+      <div class="how-step reveal delay-4" data-step="4">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            <polyline points="8 11 11 14 16 9"/>
+          </svg>
+        </div>
+        <div class="step-meta">
+          <span class="num">04</span>
+          <span class="tag">피드백 공유</span>
+        </div>
+        <h3>상담 후 피드백</h3>
+        <p>상담 후 결과를 양쪽에 투명하게 전달합니다. 등록 전환까지 끝까지 함께해요.</p>
+        <span class="time-chip">당일</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 WHY CLIPEDU (2-track + Compare 2-card) ============ -->
+<section id="why">
+  <div class="wrap">
+    <div class="why-head reveal">
+      <div class="sec-label why-label">03 · WHY CLIPEDU</div>
+      <div class="why-big-num">480<span class="plus">+</span></div>
+      <h2 class="sec-title">전국 480여 곳의 학원이 선택한 이유</h2>
+      <p class="why-sub">검증된 학부모 유입부터 매칭까지, CLIPEDU가 해결합니다.</p>
+    </div>
+
+    <div class="why-tracks reveal delay-1">
+      <!-- Track 1: 학원 -->
+      <div class="why-track academy">
+        <div class="why-track-head">
+          <div class="badge">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1m4 0h1M9 13h1m4 0h1M9 17h1m4 0h1"/></svg>
+          </div>
+          <div>
+            <div class="who">학원 원장님께</div>
+            <h3>학원 입장에서</h3>
+          </div>
+        </div>
+        <div class="why-list">
+          <div class="why-item">
+            <div class="why-item-head">
+              <span class="no">01</span>
+              <h4>마케팅 부담 ↓</h4>
+            </div>
+            <p>전단지·블로그·맘카페 광고 대비, 성과 기반의 합리적 비용 구조로 운영됩니다.</p>
+          </div>
+          <div class="why-item highlight">
+            <div class="why-item-head">
+              <span class="no">02</span>
+              <h4>모집·일정 대행</h4>
+            </div>
+            <p>신규 학부모 응대와 일정 조율을 매칭부서가 대신 처리합니다.<br>수업에만 집중하세요.</p>
+          </div>
+          <div class="why-item">
+            <div class="why-item-head">
+              <span class="no">03</span>
+              <h4>검증된 학부모만 매칭</h4>
+            </div>
+            <p>조건이 맞는 학부모만 안내하므로, 헛 상담 없이 등록 전환율이 높습니다.</p>
+          </div>
+        </div>
+        <div class="why-track-foot">
+          <span class="arrow">→</span>
+          결과: 수업·운영에만 집중하는 학원 환경
+        </div>
+      </div>
+
+      <!-- Track 2: 학부모 (사회증명) -->
+      <div class="why-track parent">
+        <div class="why-track-head">
+          <div class="badge">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 014-4h.001M9 20v-2a4 4 0 014-4h.001M9 20h6m-9-9a3 3 0 11-6 0 3 3 0 016 0zm9-3a3 3 0 11-6 0 3 3 0 016 0zm6 3a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </div>
+          <div>
+            <div class="who">우리 풀에 모이는</div>
+            <h3>학부모는 이런 분들</h3>
+          </div>
+        </div>
+        <div class="why-list">
+          <div class="why-item">
+            <div class="why-item-head">
+              <span class="no">01</span>
+              <h4>검색 피로 ↓</h4>
+            </div>
+            <p>흩어진 정보를 일일이 찾는 피로 대신,<br>원하는 시간에 상담으로 학원 정보를 알 수 있어요.</p>
+          </div>
+          <div class="why-item">
+            <div class="why-item-head">
+              <span class="no">02</span>
+              <h4>검증된 학원</h4>
+            </div>
+            <p>"우리 아이를 믿고 맡길 수 있는 곳"을 원하는 만큼,<br>검증된 학원만 추천해 드려요.</p>
+          </div>
+          <div class="why-item highlight">
+            <div class="why-item-head">
+              <span class="no">03</span>
+              <h4>연간 30만 원 지원</h4>
+            </div>
+            <p>CLIPEDU와 협업된 학원으로 등록하는 경우, 아이별·학원별 제한 없이 연간 30만 원을 상품권으로 지원합니다.</p>
+          </div>
+        </div>
+        <div class="why-track-foot">
+          <span class="arrow">→</span>
+          결과: 검증된 동기 + 등록 인센티브 = 높은 전환율
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 04 REVIEWS ============ -->
+<section id="reviews">
+  <div class="wrap">
+    <div class="reviews-grid">
+      <div class="reviews-text reveal">
+        <div class="sec-label">04 · REVIEWS</div>
+        <h2 class="sec-title">원장님이 직접 보내온 <span class="em">후기</span></h2>
+        <p class="lead">
+          매칭 진행, 정산, 신규 상담까지.<br>
+          <strong>단 한 글자도 손대지 않은</strong> 실제 카카오톡 대화입니다.
+        </p>
+        <div class="reviews-hover-note">
+          개인정보 모자이크 처리
+        </div>
+      </div>
+
+      <div class="phone-mock reveal delay-1" id="phoneMock">
+        <div class="phone-screen">
+          <div class="phone-track" id="phoneTrack">
+            <!-- images injected by JS from message img/ -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 FAQ ============ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="faq-grid">
+      <div class="faq-head reveal">
+        <div class="sec-label">05 · FAQ</div>
+        <h2 class="sec-title">궁금한 것들,<br>먼저 답해드릴게요</h2>
+        <p>원장님들이 가장 많이 물어보신 5가지. 더 궁금한 점은 1:1 상담에서 자세히 안내해 드려요.</p>
+      </div>
+
+      <div class="faq-list reveal delay-1">
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <h4>Q1. 원생 매칭 비용은 어떻게 책정되나요?</h4>
+            <span class="faq-toggle"></span>
+          </button>
+          <div class="faq-a">
+            <div class="faq-a-inner">
+              가입비·고정비 없이 매칭이 등록까지 이어졌을 때만 수수료가 발생하는 성과 기반 구조입니다. 학원 규모·과목·지역에 따라 단가가 다르므로 1:1 상담 시 정확히 안내드려요. 첫 매칭은 무료 체험으로 진행됩니다.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <h4>Q2. 계약 기간이나 위약금이 있나요?</h4>
+            <span class="faq-toggle"></span>
+          </button>
+          <div class="faq-a">
+            <div class="faq-a-inner">
+              별도 약정은 없으며, 언제든 운영을 중단할 수 있습니다. 1개월 운영 결과를 보고 계속할지 결정하셔도 됩니다.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <h4>Q3. 한 달에 몇 명까지 매칭되나요?</h4>
+            <span class="faq-toggle"></span>
+          </button>
+          <div class="faq-a">
+            <div class="faq-a-inner">
+              학원 조건과 지역 문의량에 따라 다릅니다. 협력업체 기준 연 평균 5~6명, 인기 지역은 월 단위로 매칭이 발생해요. 운영 환경을 고려해 매칭 속도를 조절할 수 있습니다.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <h4>Q4. 신청 후 매칭까지 얼마나 걸리나요?</h4>
+            <span class="faq-toggle"></span>
+          </button>
+          <div class="faq-a">
+            <div class="faq-a-inner">
+              학원 신청 접수 후 매칭부서가 <strong>24시간 안에</strong> 연락드리고, 학원 운영 환경 파악 후 평균 1~2주 안에 첫 매칭이 시작됩니다.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <h4>Q5. 학부모는 비용을 내나요?</h4>
+            <span class="faq-toggle"></span>
+          </button>
+          <div class="faq-a">
+            <div class="faq-a-inner">
+              학부모는 무료이며, 매칭된 학원에 등록할 경우 CLIPEDU에서 연간 30만 원 상품권을 지원합니다. (학부모 신청은 <a href="https://keulribedyu-gyoyugbijiweongeum-peiji.onrender.com/education-support.html" target="_blank" rel="noopener">별도 페이지</a>에서 받습니다.)
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 07 INQUIRY MAP ============ -->
+<section id="inquiry">
+  <div class="wrap">
+    <div class="map-head reveal">
+      <div>
+        <div class="sec-label">06 · INQUIRY MAP</div>
+        <h2 class="sec-title">전국 14개 시·도에서<br>운영 중입니다</h2>
+        <p class="sec-sub">운영 중인 지역을 지도에서 확인해 보세요. 우리 학원 지역의 학부모 문의량도 함께 보입니다.</p>
+      </div>
+      <div class="map-meta">
+        <div class="pill primary"><div class="v">8,500+</div><div class="l">월 평균 학부모 문의량</div></div>
+        <div class="pill primary"><div class="v">18</div><div class="l">서비스 운영 도시</div></div>
+      </div>
+    </div>
+
+    <div class="map-section reveal delay-1">
+      <div class="map-container">
+        <svg viewBox="0 0 400 500" class="map-svg">
+          <defs>
+            <linearGradient id="mapGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#3D8BFF"/>
+              <stop offset="1" stop-color="#34D2DE"/>
+            </linearGradient>
+          </defs>
+          <path class="map-region" data-region="gyeonggi" d="M120,80 L180,70 L220,100 L190,160 L130,160 L110,120 Z"/>
+          <path class="map-region" data-region="seoul" d="M150,120 L180,110 L190,130 L160,150 Z"/>
+          <path class="map-region" data-region="incheon" d="M90,110 L110,110 L120,130 L100,140 Z"/>
+          <path class="map-region" data-region="gangwon" d="M180,60 L280,40 L310,120 L230,160 L190,110 Z"/>
+          <path class="map-region" data-region="chungcheong" d="M130,160 L230,160 L250,230 L180,260 L120,210 Z"/>
+          <path class="map-region prep" data-region="jeolla" d="M100,240 L180,260 L200,340 L140,400 L80,320 Z"/>
+          <path class="map-region" data-region="gyeongsang" d="M230,160 L320,130 L360,250 L280,350 L200,340 L180,260 Z"/>
+          <path class="map-region prep" data-region="jeju" d="M120,440 L160,430 L180,450 L140,470 Z"/>
+          <text class="map-label" x="160" y="125">경기</text>
+          <text class="map-label" x="170" y="138">서울</text>
+          <text class="map-label" x="248" y="100">강원</text>
+          <text class="map-label" x="180" y="210">충청</text>
+          <text class="map-label" x="270" y="240">경상</text>
+          <text class="map-label" x="140" y="320">전라</text>
+          <text class="map-label" x="150" y="453">제주</text>
+        </svg>
+        <div class="map-legend">
+          <span class="map-legend-item"><span class="sw op"></span>서비스 운영 중</span>
+          <span class="map-legend-item"><span class="sw prep"></span>서비스 준비중</span>
+        </div>
+      </div>
+
+      <div class="region-list">
+        <div class="region-row" data-region="gyeonggi">
+          <span class="name">경기도</span>
+          <span class="vol">2,050<em>건/월</em></span>
+        </div>
+        <div class="region-row" data-region="seoul">
+          <span class="name">서울특별시</span>
+          <span class="vol">1,650<em>건/월</em></span>
+        </div>
+        <div class="region-row" data-region="gyeongsang">
+          <span class="name">경상권 (부산·대구·울산·경남)</span>
+          <span class="vol">2,260<em>건/월</em></span>
+        </div>
+        <div class="region-row" data-region="chungcheong">
+          <span class="name">충청권 (대전·세종·청주·천안)</span>
+          <span class="vol">1,100<em>건/월</em></span>
+        </div>
+        <div class="region-row" data-region="incheon">
+          <span class="name">인천광역시</span>
+          <span class="vol">620<em>건/월</em></span>
+        </div>
+        <div class="region-row" data-region="gangwon">
+          <span class="name">강원특별자치도</span>
+          <span class="vol">230<em>건/월</em></span>
+        </div>
+        <div class="region-row prep" data-region="jeolla">
+          <span class="name">전라권 (전북·전남·광주)</span>
+          <span class="vol">서비스 준비중</span>
+        </div>
+        <div class="region-row prep" data-region="jeju">
+          <span class="name">제주특별자치도</span>
+          <span class="vol">서비스 준비중</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 08 APPLY ============ -->
+<section id="apply">
+  <div class="wrap">
+    <div class="apply-grid">
+      <div class="apply-text reveal">
+        <div class="sec-label">07 · APPLY</div>
+        <h2 class="sec-title">지금 우리 학원도<br>원생 매칭 받아볼 수 있을까?</h2>
+        <p class="lead">
+          신청 학부모가 학원보다 더 많아 협력할 학원을 기다리고 있어요. <strong style="color:var(--accent-deep);">24시간 안에</strong> 매칭부서가 연락드립니다.
+        </p>
+
+        <div class="apply-contact">
+          <div class="row"><span class="k">Email</span><span class="v">clipcp@naver.com</span></div>
+          <div class="row"><span class="k">Phone</span><span class="v">010-7502-3587</span></div>
+          <div class="row"><span class="k">Office</span><span class="v">서울시 금천구 가산디지털2로 34, 12F</span></div>
+          <div class="row"><span class="k">Hours</span><span class="v">10:00 ~ 18:00 (주말·공휴일 제외)</span></div>
+        </div>
+      </div>
+
+      <form class="apply-form-card reveal delay-1" id="applyForm" novalidate>
+        <div class="form-row">
+          <div class="form-field" style="margin-bottom:0;">
+            <label for="af-academy">학원명 <span class="hint">(프랜차이즈는 지점명까지)</span></label>
+            <input type="text" id="af-academy" name="academy" placeholder="예) 클립에듀 어학원 강남점" required>
+          </div>
+          <div class="form-field" style="margin-bottom:0;">
+            <label for="af-phone">전화번호</label>
+            <input type="tel" id="af-phone" name="phone" placeholder="회신받으실 번호를 적어주세요" required>
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="af-addr">사업장 주소</label>
+          <input type="text" id="af-addr" name="address" placeholder="정확한 상담을 위해 입력 필수" required>
+        </div>
+        <div class="form-field">
+          <label>관심 항목 <span class="hint">(중복 선택 가능)</span></label>
+          <div class="form-checks">
+            <label class="form-check">
+              <input type="checkbox" name="interest" value="match">
+              <span class="form-check-text">원생 매칭 운영</span>
+            </label>
+            <label class="form-check">
+              <input type="checkbox" name="interest" value="price">
+              <span class="form-check-text">비용 안내</span>
+            </label>
+            <label class="form-check">
+              <input type="checkbox" name="interest" value="demo">
+              <span class="form-check-text">시연 요청</span>
+            </label>
+            <label class="form-check">
+              <input type="checkbox" name="interest" value="etc">
+              <span class="form-check-text">기타 문의</span>
+            </label>
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="af-msg">신청 내용 <span class="hint">(선택)</span></label>
+          <textarea id="af-msg" name="message" placeholder="자유롭게 적어주세요"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary form-submit">원생 매칭 신청하기 <span class="arrow">→</span></button>
+        <div class="apply-parent-outlink">
+          👨‍👩‍👧 학부모로 매칭 신청하시려면 → <a href="https://keulribedyu-gyoyugbijiweongeum-peiji.onrender.com/education-support.html" target="_blank" rel="noopener">학부모 지원금 페이지</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <a href="#top" class="foot-brand" aria-label="CLIPEDU 홈">
+        <img src="assets/clipedu-logo.png" alt="CLIPEDU" class="foot-logo">
+        <small>원생매칭 플랫폼</small>
+      </a>
+      <ul class="foot-menu">
+        <li><a href="#about">서비스</a></li>
+        <li><a href="#how">매칭 과정</a></li>
+        <li><a href="#reviews">후기</a></li>
+          <li><a href="https://keulribedyu-gyoyugbijiweongeum-peiji.onrender.com/education-support.html" target="_blank" rel="noopener" class="parent-link">학부모 신청 →</a></li>
+      </ul>
+    </div>
+    <div class="foot-bottom">
+      <div class="biz">(주)클립에듀 · 사업자등록번호 000-00-00000 · 서울시 금천구 가산디지털2로 34, 12F</div>
+      <div>© 2026 CLIPEDU. All rights reserved.</div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ STICKY CTA BAR ============ -->
+<div class="sticky-cta" id="stickyCta">
+  <span class="label">지금 신청하면 24시간 내 연락 드려요</span>
+  <a href="#apply" class="btn btn-primary">원생 매칭 신청 <span class="arrow">→</span></a>
+</div>
+
+<!-- ============ SCRIPTS ============ -->
+<script>
+  // ── responsive build marker (verify cache freshness in console) ──
+  console.log('[CLIPEDU] responsive build: 2026-05-27-v3 · viewport='+window.innerWidth+'px');
+
+  // nav scroll state
+  const hdr = document.getElementById('hdr');
+  const onScroll = () => hdr.classList.toggle('scrolled', window.scrollY > 40);
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  // Mobile hamburger toggle
+  (function setupNavToggle(){
+    const toggle = document.getElementById('navToggle');
+    const links = document.getElementById('navLinks');
+    const backdrop = document.getElementById('navBackdrop');
+    if(!toggle || !links || !backdrop) return;
+    const close = ()=>{
+      toggle.classList.remove('open');
+      links.classList.remove('open');
+      backdrop.classList.remove('visible');
+      document.body.classList.remove('nav-open');
+      toggle.setAttribute('aria-expanded','false');
+      toggle.setAttribute('aria-label','메뉴 열기');
+    };
+    const open = ()=>{
+      toggle.classList.add('open');
+      links.classList.add('open');
+      backdrop.classList.add('visible');
+      document.body.classList.add('nav-open');
+      toggle.setAttribute('aria-expanded','true');
+      toggle.setAttribute('aria-label','메뉴 닫기');
+    };
+    toggle.addEventListener('click', ()=>{
+      toggle.classList.contains('open') ? close() : open();
+    });
+    const navClose = document.getElementById('navClose');
+    if(navClose) navClose.addEventListener('click', close);
+    backdrop.addEventListener('click', close);
+    links.querySelectorAll('a').forEach(a=>a.addEventListener('click', (e)=>{
+      const href = a.getAttribute('href');
+      if(href && href.startsWith('#')) {
+        e.preventDefault();
+        close();
+        const target = document.querySelector(href);
+        if(target) {
+          setTimeout(()=>{
+            target.scrollIntoView({behavior: 'smooth'});
+            window.history.pushState(null, null, href);
+          }, 150);
+        }
+      }
+    }));
+    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') close(); });
+    // Auto-close if resized back to desktop
+    const mq = window.matchMedia('(min-width: 769px)');
+    mq.addEventListener('change', (e)=>{ if(e.matches) close(); });
+  })();
+
+  // ── Scroll Spy (GNB highlight on scroll) ──
+  (function setupScrollSpy(){
+    const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+    const sections = document.querySelectorAll('section[id]');
+
+    const updateActiveLink = () => {
+      let currentSection = null;
+
+      sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if(rect.top <= 150 && rect.bottom > 150) {
+          currentSection = section.id;
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if(link.getAttribute('href') === `#${currentSection}`) {
+          link.classList.add('active');
+        }
+      });
+    };
+
+    window.addEventListener('scroll', updateActiveLink, {passive: true});
+    updateActiveLink();
+  })();
+
+  // ── Supabase Integration ──
+  (function setupSupabase(){
+    const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // 예: https://xxxx.supabase.co
+    const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+    // Supabase 자격증명이 설정되지 않으면 폼 제출만 alert로 처리
+    if(!SUPABASE_URL.includes('supabase') || !SUPABASE_KEY) {
+      console.warn('⚠️ Supabase 설정이 필요합니다. 폼 제출은 기본 alert로만 작동합니다.');
+      const form = document.getElementById('applyForm');
+      if(form) {
+        form.addEventListener('submit', (e)=>{
+          e.preventDefault();
+          alert('감사합니다! 24시간 내 연락드리겠습니다.\n\n(현재 Supabase DB 설정 대기 중)');
+          form.reset();
+        });
+      }
+      return;
+    }
+
+    // Supabase가 window에 로드되었는지 확인
+    if(!window.supabase) {
+      console.error('Supabase 라이브러리가 로드되지 않았습니다.');
+      return;
+    }
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const form = document.getElementById('applyForm');
+    if(!form) return;
+
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+
+      const submitBtn = form.querySelector('.form-submit');
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = '제출 중...';
+
+      try {
+        const formData = new FormData(form);
+        const interests = Array.from(formData.getAll('interest'));
+
+        const { data, error } = await supabase
+          .from('inquiries')
+          .insert({
+            academy: formData.get('academy'),
+            phone: formData.get('phone'),
+            address: formData.get('address'),
+            interests: interests,
+            message: formData.get('message') || null
+          });
+
+        if(error) throw error;
+
+        // 성공 메시지
+        submitBtn.textContent = '신청이 완료되었습니다! 🎉';
+        submitBtn.style.backgroundColor = 'var(--accent-2)';
+        form.reset();
+
+        setTimeout(()=>{
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+          submitBtn.style.backgroundColor = '';
+        }, 3000);
+
+      } catch(err) {
+        console.error('Supabase 제출 에러:', err);
+        alert('신청 중 오류가 발생했습니다. 다시 시도해주세요.\n' + err.message);
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
+    });
+  })();
+
+  // reveal on scroll
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach((e)=>{
+      if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}
+    });
+  },{threshold:0.14});
+  document.querySelectorAll('.reveal').forEach((el)=>io.observe(el));
+
+  // How sticky — progress dots + step in-view highlight
+  const steps = document.querySelectorAll('.how-step');
+  const dots = document.querySelectorAll('.how-dot');
+  const howIo = new IntersectionObserver((entries)=>{
+    entries.forEach((e)=>{
+      if(e.isIntersecting){
+        const n = parseInt(e.target.dataset.step,10);
+        steps.forEach(s=>s.classList.toggle('in-view', parseInt(s.dataset.step,10)===n));
+        dots.forEach(d=>d.classList.toggle('active', parseInt(d.dataset.dot,10)===n));
+      }
+    });
+  },{rootMargin:'-45% 0px -45% 0px',threshold:0});
+  steps.forEach(s=>howIo.observe(s));
+
+  // FAQ accordion (single open)
+  document.querySelectorAll('.faq-item').forEach((item)=>{
+    const q = item.querySelector('.faq-q');
+    const a = item.querySelector('.faq-a');
+    q.addEventListener('click', ()=>{
+      const willOpen = !item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(o=>{
+        o.classList.remove('open');
+        o.querySelector('.faq-a').style.maxHeight = null;
+        o.querySelector('.faq-q').setAttribute('aria-expanded','false');
+      });
+      if(willOpen){
+        item.classList.add('open');
+        a.style.maxHeight = a.scrollHeight+'px';
+        q.setAttribute('aria-expanded','true');
+      }
+    });
+  });
+  window.addEventListener('resize', ()=>{
+    document.querySelectorAll('.faq-item.open').forEach(o=>{
+      const a = o.querySelector('.faq-a');
+      a.style.maxHeight = 'none';
+      a.style.maxHeight = a.scrollHeight+'px';
+    });
+  });
+
+  // Map ↔ list sync
+  const regions = document.querySelectorAll('.map-region');
+  const rows = document.querySelectorAll('.region-row');
+  function highlight(id){
+    regions.forEach(r=>r.classList.toggle('active', r.dataset.region===id));
+    rows.forEach(r=>r.classList.toggle('active', r.dataset.region===id));
+  }
+  function clearHighlight(){
+    regions.forEach(r=>r.classList.remove('active'));
+    rows.forEach(r=>r.classList.remove('active'));
+  }
+  regions.forEach(r=>{
+    r.addEventListener('mouseenter', ()=>highlight(r.dataset.region));
+    r.addEventListener('mouseleave', clearHighlight);
+  });
+  rows.forEach(r=>{
+    r.addEventListener('mouseenter', ()=>highlight(r.dataset.region));
+    r.addEventListener('mouseleave', clearHighlight);
+  });
+
+  // Sticky CTA — show after hero scrolled past, hide near apply
+  const sticky = document.getElementById('stickyCta');
+  const applyEl = document.getElementById('apply');
+  const heroEl = document.querySelector('.hero');
+  function syncSticky(){
+    if(!sticky || !applyEl || !heroEl) return;
+    const past = window.scrollY > heroEl.offsetTop + heroEl.offsetHeight - 100;
+    const applyRect = applyEl.getBoundingClientRect();
+    const inApply = applyRect.top < window.innerHeight*0.7 && applyRect.bottom > 0;
+    sticky.classList.toggle('visible', past && !inApply);
+  }
+  window.addEventListener('scroll', syncSticky, {passive:true});
+  syncSticky();
+
+  // Reviews phone — inject real KakaoTalk images + seamless rolling
+  (function setupReviewPhone(){
+    const mock = document.getElementById('phoneMock');
+    const track = document.getElementById('phoneTrack');
+    if(!mock || !track) return;
+    const conversations = [
+      {prefix:'KakaoTalk_20260526_104809704', count:29},
+      {prefix:'KakaoTalk_20260526_104856837', count:30},
+      {prefix:'KakaoTalk_20260526_104858910', count:11}
+    ];
+    const base = encodeURIComponent('message img').replace(/%2F/g,'/');
+    const all = [];
+    conversations.forEach((c)=>{
+      for(let i=0;i<c.count;i++){
+        const suffix = i===0 ? '' : '_'+String(i).padStart(2,'0');
+        all.push(`${base}/${c.prefix}${suffix}.png`);
+      }
+    });
+    const SETS = 2;
+    let loaded = 0, started = false;
+    const total = all.length * SETS;
+    const start = ()=>{
+      if(started) return;
+      started = true;
+      measure();
+      mock.classList.add('ready');
+    };
+    for(let s=0;s<SETS;s++){
+      all.forEach((src, idx)=>{
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = s===0 ? '원장님과의 카카오톡 대화' : '';
+        if(s>0) img.setAttribute('aria-hidden','true');
+        img.decoding = 'async';
+        img.loading = (s===0 && idx<6) ? 'eager' : 'lazy';
+        const done = ()=>{loaded++; if(loaded>=total) start();};
+        img.addEventListener('load', done);
+        img.addEventListener('error', done);
+        track.appendChild(img);
+      });
+    }
+    setTimeout(start, 8000); // safety
+    function measure(){
+      const singleSetH = track.scrollHeight / SETS;
+      // ~50 px/s — relaxed reading pace
+      const duration = Math.min(600, Math.max(180, singleSetH / 50));
+      mock.style.setProperty('--scroll-duration', `${duration}s`);
+    }
+    window.addEventListener('resize', measure);
+  })();
+
+  // Header hide on scroll (mobile only, ≤1024px)
+  (()=>{
+    const hdr = document.getElementById('hdr');
+    let prevScrollY = 0;
+    let scrollTimeout;
+
+    const updateHeader = ()=>{
+      const currentScrollY = window.scrollY;
+      const isScrollingDown = currentScrollY > prevScrollY;
+
+      if(window.innerWidth <= 1024){
+        if(isScrollingDown && currentScrollY > 100){
+          hdr.classList.add('hide-on-scroll');
+        } else {
+          hdr.classList.remove('hide-on-scroll');
+        }
+      } else {
+        hdr.classList.remove('hide-on-scroll');
+      }
+
+      prevScrollY = currentScrollY;
+    };
+
+    window.addEventListener('scroll', ()=>{
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(updateHeader, 50);
+    }, {passive:true});
+
+    window.addEventListener('resize', ()=>{
+      if(window.innerWidth > 1024){
+        hdr.classList.remove('hide-on-scroll');
+      }
+    });
+  })();
+
+  // Form submit (placeholder)
+  const form = document.getElementById('applyForm');
+  if(form){
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      alert('신청이 접수됐어요. 24시간 안에 매칭부서가 연락드릴게요.');
+    });
+  }
+</script>
+</body>
+</html>

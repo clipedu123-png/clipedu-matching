@@ -1,0 +1,1083 @@
+<html lang="ko" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">CLIPEDU - 원생 유입 솔루션</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="5">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="6">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@200;300;400;500;600;700&amp;display=swap" rel="stylesheet" vid="7">
+    <style vid="8">
+        :root {
+            --bg: #EEF3FC;
+            --surface: #FFFFFF;
+            --primary: #2E7DF6;
+            --grad-start: #3D8BFF;
+            --grad-end: #34D2DE;
+            --gradient: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+            --text-main: #1A2639;
+            --text-muted: #64748B;
+            --text-light: #94A3B8;
+            --border: #E2E8F0;
+            --border-light: #F1F5F9;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 8px;
+            --shadow-soft: 0 24px 48px -12px rgba(46, 125, 246, 0.12);
+            --shadow-hover: 0 32px 64px -12px rgba(46, 125, 246, 0.2);
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans KR', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            margin-bottom: 64px;
+            font-weight: 400;
+        }
+
+        .label-micro {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .gradient-text {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 0;
+            z-index: 100;
+            background: rgba(238, 243, 252, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+            transition: var(--transition);
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            color: var(--text-main);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo::before {
+            content: '';
+            display: block;
+            width: 12px;
+            height: 12px;
+            background: var(--gradient);
+            border-radius: 50%;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.9375rem;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-main);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            opacity: 1;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9375rem;
+            box-shadow: 0 8px 16px rgba(46, 125, 246, 0.2);
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(46, 125, 246, 0.3);
+        }
+
+        
+        .hero {
+            padding: 180px 0 120px;
+            position: relative;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(61, 139, 255, 0.15) 0%, rgba(238, 243, 252, 0) 70%);
+            z-index: -1;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            line-height: 1.1;
+            margin-bottom: 24px;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        
+        .map-section {
+            padding: 100px 0;
+            background: var(--surface);
+            position: relative;
+            z-index: 1;
+        }
+
+        .map-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+        }
+
+        .map-container {
+            background: var(--bg);
+            border-radius: var(--radius-lg);
+            padding: 48px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);
+        }
+
+        .map-svg {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            filter: drop-shadow(0 10px 20px rgba(46, 125, 246, 0.1));
+        }
+
+        .map-path {
+            fill: #FFFFFF;
+            stroke: var(--border);
+            stroke-width: 2;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .map-path:hover, .map-path.active {
+            fill: var(--grad-start);
+            stroke: var(--grad-end);
+            transform: translateY(-2px);
+        }
+
+        .map-stats-overlay {
+            position: absolute;
+            top: 32px;
+            left: 32px;
+        }
+
+        .map-stats-overlay .num {
+            font-size: 3rem;
+            font-weight: 300;
+            line-height: 1;
+            letter-spacing: -0.05em;
+            color: var(--text-main);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            text-align: left;
+            padding: 16px;
+            font-size: 0.8125rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-light);
+            border-bottom: 1px solid var(--border);
+            font-weight: 500;
+        }
+
+        .data-table td {
+            padding: 20px 16px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-main);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .data-table tr {
+            transition: var(--transition);
+            border-radius: var(--radius-sm);
+        }
+
+        .data-table tr:hover, .data-table tr.active {
+            background: var(--bg);
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .data-table tr:hover td, .data-table tr.active td {
+            border-bottom-color: transparent;
+        }
+
+        .data-table td:last-child {
+            text-align: right;
+            font-feature-settings: "tnum";
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .trend-up {
+            color: #10B981;
+            font-size: 0.875rem;
+            margin-left: 8px;
+        }
+
+        
+        .stats-section {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            padding: 40px 32px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-num {
+            font-size: 4rem;
+            font-weight: 200;
+            letter-spacing: -0.05em;
+            color: var(--text-main);
+            line-height: 1;
+            margin: 16px 0;
+            font-feature-settings: "tnum";
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .stat-divider {
+            width: 24px;
+            height: 2px;
+            background: var(--border);
+            margin: 24px 0 0;
+        }
+
+        
+        .stepper-section {
+            padding: 100px 0;
+            background: var(--surface);
+        }
+
+        .stepper-wrapper {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-top: 64px;
+            padding: 0 24px;
+        }
+
+        .stepper-line {
+            position: absolute;
+            top: 24px;
+            left: 5%;
+            right: 5%;
+            height: 2px;
+            background: var(--border);
+            z-index: 1;
+        }
+
+        .stepper-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: var(--gradient);
+            width: 0%; 
+            transition: width 1.5s ease-in-out;
+        }
+
+        .step-item {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            width: 140px;
+        }
+
+        .step-circle {
+            width: 50px;
+            height: 50px;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 1.125rem;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+
+        .step-item:hover .step-circle {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .step-title {
+            font-weight: 600;
+            font-size: 1.125rem;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .step-desc {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        
+        .reviews-section {
+            padding: 120px 0;
+            overflow: hidden;
+        }
+
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .phone-mockup {
+            width: 320px;
+            height: 650px;
+            background: #FFFFFF;
+            border-radius: 40px;
+            box-shadow: 
+                inset 0 0 0 10px #1A2639,
+                inset 0 0 0 12px #334155,
+                0 40px 80px -20px rgba(46, 125, 246, 0.25);
+            position: relative;
+            margin: 0 auto;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transform: rotate(-2deg);
+            transition: transform 0.5s ease;
+        }
+
+        .phone-mockup:hover {
+            transform: rotate(0deg) translateY(-10px);
+        }
+
+        .phone-notch {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 25px;
+            background: #1A2639;
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+            z-index: 10;
+        }
+
+        .chat-header {
+            background: #B2C7D9; 
+            padding: 45px 20px 15px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9375rem;
+            color: #1A2639;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            z-index: 5;
+        }
+
+        .chat-container {
+            flex: 1;
+            background: #B2C7D9;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .chat-scroll {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            animation: scrollChat 20s linear infinite;
+        }
+
+        .phone-mockup:hover .chat-scroll {
+            animation-play-state: paused;
+        }
+
+        @keyframes scrollChat {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-50%); }
+        }
+
+        .chat-bubble {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            line-height: 1.4;
+            position: relative;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .chat-received {
+            background: #FFFFFF;
+            align-self: flex-start;
+            border-top-left-radius: 4px;
+        }
+
+        .chat-received::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: -6px;
+            border-style: solid;
+            border-width: 6px 6px 6px 0;
+            border-color: transparent #FFFFFF transparent transparent;
+        }
+
+        .chat-sent {
+            background: #FEE500; 
+            align-self: flex-end;
+            border-top-right-radius: 4px;
+        }
+
+        .chat-sent::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            right: -6px;
+            border-style: solid;
+            border-width: 6px 0 6px 6px;
+            border-color: transparent transparent transparent #FEE500;
+        }
+
+        .chat-time {
+            font-size: 0.65rem;
+            color: #556677;
+            position: absolute;
+            bottom: 2px;
+        }
+        
+        .chat-received .chat-time { right: -35px; }
+        .chat-sent .chat-time { left: -35px; }
+
+        
+        .contact-section {
+            padding: 100px 0 140px;
+            background: var(--surface);
+        }
+
+        .form-card {
+            background: #FFFFFF;
+            border-radius: var(--radius-lg);
+            padding: 64px;
+            box-shadow: var(--shadow-soft);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 16px 20px;
+            background: var(--bg);
+            border: 1px solid transparent;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 1rem;
+            color: var(--text-main);
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            background: #FFFFFF;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(46, 125, 246, 0.1);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 20px;
+            font-size: 1.125rem;
+            text-align: center;
+        }
+
+        
+        footer {
+            background: #1A2639;
+            color: #94A3B8;
+            padding: 60px 0;
+            text-align: center;
+            font-size: 0.875rem;
+        }
+
+        @media (max-width: 992px) {
+            .map-grid, .reviews-grid { grid-template-columns: 1fr; gap: 48px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .hero h1 { font-size: 3rem; }
+            .stepper-wrapper { flex-direction: column; gap: 32px; align-items: flex-start; padding-left: 40px; }
+            .stepper-line { width: 2px; height: 100%; top: 0; left: 63px; }
+            .step-item { display: flex; width: 100%; text-align: left; align-items: center; gap: 24px; }
+            .step-circle { margin: 0; flex-shrink: 0; }
+            .form-grid { grid-template-columns: 1fr; }
+            .form-group.full-width { grid-column: span 1; }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 2.5rem; }
+            .nav-links { display: none; } 
+            .form-card { padding: 32px 20px; }
+        }
+    </style>
+</head>
+<body vid="9">
+
+    <nav vid="10">
+        <div class="container" vid="11">
+            <a href="#" class="logo" vid="12">CLIPEDU</a>
+            <ul class="nav-links" vid="13">
+                <li vid="14"><a href="#inquiry" vid="15">Inquiry Data</a></li>
+                <li vid="16"><a href="#about" vid="17">Overview</a></li>
+                <li vid="18"><a href="#projects" vid="19">Process</a></li>
+                <li vid="20"><a href="#reviews" vid="21">Reviews</a></li>
+                <li vid="22"><a href="#contact" vid="23">Contact</a></li>
+            </ul>
+            <a href="#contact" class="btn-primary" vid="24">무료 상담 신청</a>
+        </div>
+    </nav>
+
+    <section class="hero" vid="25">
+        <div class="container reveal" vid="26">
+            <span class="label-micro" vid="27">ACADEMY GROWTH PARTNER</span>
+            <h1 vid="28">원생 유지, 자신 있으신가요?<br vid="29"><span class="gradient-text" vid="30">원생 유입은 우리가 할게요!</span></h1>
+            <p vid="31">데이터 기반의 정교한 타겟팅과 지역 맞춤형 마케팅으로 학원의 성장을 가속화합니다. 이미 1,200개 이상의 기관이 경험한 확실한 변화를 시작하세요.</p>
+        </div>
+    </section>
+
+    <section id="inquiry" class="map-section" vid="32">
+        <div class="container" vid="33">
+            <div class="map-grid" vid="34">
+                <div class="map-container reveal" vid="35">
+                    <div class="map-stats-overlay" vid="36">
+                        <div class="label-micro" vid="37">MONTHLY INQUIRIES</div>
+                        <div class="num" vid="38">8,500<span style="color:var(--primary)" vid="39">+</span></div>
+                    </div>
+                    
+                    <svg class="map-svg" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg" vid="40">
+                        
+                        <path class="map-path" data-region="seoul" d="M100,80 L140,70 L160,100 L120,120 Z" vid="41"></path>
+                        <path class="map-path" data-region="seoul" d="M110,120 L160,100 L180,140 L130,160 Z" vid="42"></path>
+                        
+                        <path class="map-path" data-region="gangwon" d="M140,70 L200,40 L230,90 L180,140 L160,100 Z" vid="43"></path>
+                        
+                        <path class="map-path" data-region="chung" d="M100,160 L130,160 L180,140 L170,200 L120,210 Z" vid="44"></path>
+                        
+                        <path class="map-path" data-region="jeolla" d="M90,210 L120,210 L140,270 L110,330 L70,280 Z" vid="45"></path>
+                        
+                        <path class="map-path" data-region="gyeong" d="M170,200 L230,170 L250,240 L200,300 L140,270 L120,210 Z" vid="46"></path>
+                        
+                        <path class="map-path" data-region="jeju" d="M70,360 L100,350 L110,370 L80,380 Z" vid="47"></path>
+                        
+                        
+                        <circle cx="130" cy="95" r="4" fill="var(--primary)" vid="48"></circle>
+                        <circle cx="185" cy="90" r="4" fill="var(--primary)" vid="49"></circle>
+                        <circle cx="145" cy="180" r="4" fill="var(--primary)" vid="50"></circle>
+                        <circle cx="105" cy="260" r="4" fill="var(--primary)" vid="51"></circle>
+                        <circle cx="195" cy="240" r="4" fill="var(--primary)" vid="52"></circle>
+                    </svg>
+                </div>
+                <div class="data-container reveal" vid="53">
+                    <span class="label-micro" vid="54">01 / REGIONAL DATA</span>
+                    <h2 class="section-title" vid="55">전국 18개 도시,<br vid="56">압도적인 매칭 데이터</h2>
+                    <p class="section-subtitle" vid="57">지도 영역을 호버하여 지역별 실시간 유입 데이터를 확인하세요.</p>
+                    
+                    <table class="data-table" vid="58">
+                        <thead vid="59">
+                            <tr vid="60">
+                                <th vid="61">지역</th>
+                                <th vid="62">활성 학원</th>
+                                <th vid="63">전월 대비</th>
+                                <th vid="64">월간 유입량</th>
+                            </tr>
+                        </thead>
+                        <tbody vid="65">
+                            <tr data-target="seoul" vid="66">
+                                <td vid="67">서울/경기권</td>
+                                <td vid="68">482개</td>
+                                <td vid="69"><span class="trend-up" vid="70">↑ 12%</span></td>
+                                <td vid="71">3,240건</td>
+                            </tr>
+                            <tr data-target="gyeong" vid="72">
+                                <td vid="73">경상권 (부산/대구)</td>
+                                <td vid="74">315개</td>
+                                <td vid="75"><span class="trend-up" vid="76">↑ 8%</span></td>
+                                <td vid="77">2,150건</td>
+                            </tr>
+                            <tr data-target="chung" vid="78">
+                                <td vid="79">충청권 (대전/세종)</td>
+                                <td vid="80">184개</td>
+                                <td vid="81"><span class="trend-up" vid="82">↑ 15%</span></td>
+                                <td vid="83">1,420건</td>
+                            </tr>
+                            <tr data-target="jeolla" vid="84">
+                                <td vid="85">전라권 (광주/전주)</td>
+                                <td vid="86">142개</td>
+                                <td vid="87"><span class="trend-up" vid="88">↑ 5%</span></td>
+                                <td vid="89">980건</td>
+                            </tr>
+                            <tr data-target="gangwon" vid="90">
+                                <td vid="91">강원/제주권</td>
+                                <td vid="92">85개</td>
+                                <td vid="93"><span class="trend-up" vid="94">↑ 22%</span></td>
+                                <td vid="95">710건</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="stats-section" vid="96">
+        <div class="container reveal" vid="97">
+            <span class="label-micro" vid="98">02 / PLATFORM OVERVIEW</span>
+            <div class="stats-grid" vid="99">
+                <div class="stat-card" vid="100">
+                    <div class="label-micro" style="color:var(--text-muted)" vid="101">CUMULATIVE MATCHES</div>
+                    <div class="stat-num" vid="102">60<span style="font-size:2rem" vid="103">k+</span></div>
+                    <div class="stat-label" vid="104">누적 원생 매칭 건수</div>
+                    <div class="stat-divider" vid="105"></div>
+                </div>
+                <div class="stat-card" vid="106">
+                    <div class="label-micro" style="color:var(--text-muted)" vid="107">PARTNER INSTITUTIONS</div>
+                    <div class="stat-num" vid="108">1.2<span style="font-size:2rem" vid="109">k</span></div>
+                    <div class="stat-label" vid="110">제휴 교육 기관</div>
+                    <div class="stat-divider" vid="111"></div>
+                </div>
+                <div class="stat-card" vid="112">
+                    <div class="label-micro" style="color:var(--text-muted)" vid="113">SATISFACTION RATE</div>
+                    <div class="stat-num" vid="114">98<span style="font-size:2rem" vid="115">%</span></div>
+                    <div class="stat-label" vid="116">원장님 만족도</div>
+                    <div class="stat-divider" vid="117"></div>
+                </div>
+                <div class="stat-card" vid="118">
+                    <div class="label-micro" style="color:var(--text-muted)" vid="119">AVERAGE RESPONSE</div>
+                    <div class="stat-num" vid="120">24<span style="font-size:2rem" vid="121">h</span></div>
+                    <div class="stat-label" vid="122">평균 매칭 소요 시간</div>
+                    <div class="stat-divider" vid="123"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="stepper-section" vid="124">
+        <div class="container reveal" vid="125">
+            <span class="label-micro" vid="126">03 / HOW IT WORKS</span>
+            <h2 class="section-title" vid="127">단 4단계로 끝나는<br vid="128">스마트 원생 유입 시스템</h2>
+            
+            <div class="stepper-wrapper" vid="129">
+                <div class="stepper-line" vid="130">
+                    <div class="stepper-progress" id="stepProgress" vid="131"></div>
+                </div>
+                
+                <div class="step-item" vid="132">
+                    <div class="step-circle" vid="133">1</div>
+                    <div class="step-title" vid="134">상담 신청</div>
+                    <div class="step-desc" vid="135">온라인 폼을 통해<br vid="136">간단한 학원 정보를<br vid="137">입력합니다.</div>
+                </div>
+                <div class="step-item" vid="138">
+                    <div class="step-circle" vid="139">2</div>
+                    <div class="step-title" vid="140">학원 탐색</div>
+                    <div class="step-desc" vid="141">전담 매니저가 지역 내<br vid="142">경쟁 및 타겟 분석을<br vid="143">진행합니다.</div>
+                </div>
+                <div class="step-item" vid="144">
+                    <div class="step-circle" vid="145">3</div>
+                    <div class="step-title" vid="146">시간 조율</div>
+                    <div class="step-desc" vid="147">원장님 편하신 시간에<br vid="148">맞춰 상세 컨설팅을<br vid="149">예약합니다.</div>
+                </div>
+                <div class="step-item" vid="150">
+                    <div class="step-circle" vid="151">4</div>
+                    <div class="step-title" vid="152">상담 확인</div>
+                    <div class="step-desc" vid="153">최적화된 마케팅<br vid="154">플랜을 제안받고<br vid="155">유입을 시작합니다.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="reviews" class="reviews-section" vid="156">
+        <div class="container" vid="157">
+            <div class="reviews-grid" vid="158">
+                <div class="reveal" vid="159">
+                    <span class="label-micro" vid="160">04 / REAL FEEDBACK</span>
+                    <h2 class="section-title" vid="161">"가장 확실한 선택이었습니다"</h2>
+                    <p class="section-subtitle" vid="162">클립에듀와 함께 성장하고 있는 원장님들의 생생한 후기를 확인하세요. 허위 리뷰 없는 100% 실제 카카오톡 피드백입니다.</p>
+                    
+                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 16px;" vid="163">
+                        <li style="display: flex; gap: 12px; align-items: center;" vid="164">
+                            <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--primary);" vid="165"></div>
+                            <span style="font-weight: 500; color: var(--text-main);" vid="166">오픈 3개월차 수학학원 (원생 12명 → 45명)</span>
+                        </li>
+                        <li style="display: flex; gap: 12px; align-items: center;" vid="167">
+                            <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--grad-end);" vid="168"></div>
+                            <span style="font-weight: 500; color: var(--text-main);" vid="169">정체기 어학원 (월평균 신규 문의 3건 → 18건)</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="phone-mockup reveal" vid="170">
+                    <div class="phone-notch" vid="171"></div>
+                    <div class="chat-header" vid="172">클립에듀 전담 매니저</div>
+                    <div class="chat-container" vid="173">
+                        <div class="chat-scroll" vid="174">
+                            
+                            <div class="chat-bubble chat-received" vid="175">
+                                원장님, 이번 주 신규 DB 5건 전달드렸습니다. 확인 부탁드려요! 😊
+                                <span class="chat-time" vid="176">오후 2:30</span>
+                            </div>
+                            <div class="chat-bubble chat-sent" vid="177">
+                                네 매니저님 확인했습니다! 안그래도 어제 2명은 바로 등록했어요.
+                                <span class="chat-time" vid="178">오후 2:45</span>
+                            </div>
+                            <div class="chat-bubble chat-sent" vid="179">
+                                확실히 타겟팅이 잘돼서 그런지 상담 전환율이 높네요 ㅎㅎ
+                                <span class="chat-time" vid="180">오후 2:45</span>
+                            </div>
+                            <div class="chat-bubble chat-received" vid="181">
+                                다행이네요! 다음 주는 기말고사 대비 키워드로 조금 더 공격적으로 세팅해두겠습니다.
+                                <span class="chat-time" vid="182">오후 2:50</span>
+                            </div>
+                            <div class="chat-bubble chat-sent" vid="183">
+                                감사합니다. 주변 원장님들한테도 추천하고 있어요~
+                                <span class="chat-time" vid="184">오후 3:10</span>
+                            </div>
+                            
+                            
+                            <div class="chat-bubble chat-received" style="margin-top: 30px;" vid="185">
+                                원장님, 이번 주 신규 DB 5건 전달드렸습니다. 확인 부탁드려요! 😊
+                                <span class="chat-time" vid="186">오후 2:30</span>
+                            </div>
+                            <div class="chat-bubble chat-sent" vid="187">
+                                네 매니저님 확인했습니다! 안그래도 어제 2명은 바로 등록했어요.
+                                <span class="chat-time" vid="188">오후 2:45</span>
+                            </div>
+                            <div class="chat-bubble chat-sent" vid="189">
+                                확실히 타겟팅이 잘돼서 그런지 상담 전환율이 높네요 ㅎㅎ
+                                <span class="chat-time" vid="190">오후 2:45</span>
+                            </div>
+                            <div class="chat-bubble chat-received" vid="191">
+                                다행이네요! 다음 주는 기말고사 대비 키워드로 조금 더 공격적으로 세팅해두겠습니다.
+                                <span class="chat-time" vid="192">오후 2:50</span>
+                            </div>
+                            <div class="chat-bubble chat-sent" vid="193">
+                                감사합니다. 주변 원장님들한테도 추천하고 있어요~
+                                <span class="chat-time" vid="194">오후 3:10</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact-section" vid="195">
+        <div class="container reveal" vid="196">
+            <div class="form-card" vid="197">
+                <span class="label-micro" style="text-align: center;" vid="198">START GROWING</span>
+                <h2 class="section-title" style="text-align: center; margin-bottom: 8px;" vid="199">제휴 학원 입점 신청</h2>
+                <p class="section-subtitle" style="text-align: center;" vid="200">간단한 정보만 남겨주시면 담당자가 24시간 내에 연락드립니다.</p>
+                
+                <form onsubmit="event.preventDefault();" vid="201">
+                    <div class="form-grid" vid="202">
+                        <div class="form-group" vid="203">
+                            <label class="form-label" vid="204">학원명</label>
+                            <input type="text" class="form-control" placeholder="예) 클립에듀 수학학원" vid="205">
+                        </div>
+                        <div class="form-group" vid="206">
+                            <label class="form-label" vid="207">담당자 성함</label>
+                            <input type="text" class="form-control" placeholder="예) 홍길동 원장" vid="208">
+                        </div>
+                        <div class="form-group" vid="209">
+                            <label class="form-label" vid="210">연락처</label>
+                            <input type="tel" class="form-control" placeholder="010-0000-0000" vid="211">
+                        </div>
+                        <div class="form-group" vid="212">
+                            <label class="form-label" vid="213">학원 주소 (시/구)</label>
+                            <input type="text" class="form-control" placeholder="예) 서울시 강남구" vid="214">
+                        </div>
+                        <div class="form-group full-width" vid="215">
+                            <label class="form-label" vid="216">현재 고민이신 부분 (선택)</label>
+                            <textarea class="form-control" placeholder="신규 원생 유입, 휴원생 방어, 강사 채용 등 자유롭게 적어주세요." vid="217"></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary btn-submit" vid="218">무료 컨설팅 신청하기</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer vid="219">
+        <div class="container" vid="220">
+            <div class="logo" style="justify-content: center; color: white; margin-bottom: 24px;" vid="221">CLIPEDU</div>
+            <p vid="222">© 2024 CLIPEDU. All rights reserved. Designed for Academy Growth.</p>
+        </div>
+    </footer>
+
+    <script vid="223">
+        
+        const reveals = document.querySelectorAll('.reveal');
+        const revealOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
+
+        const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                entry.target.classList.add('active');
+                
+                
+                if(entry.target.closest('#projects')) {
+                    setTimeout(() => {
+                        document.getElementById('stepProgress').style.width = '100%';
+                    }, 500);
+                }
+                
+                observer.unobserve(entry.target);
+            });
+        }, revealOptions);
+
+        reveals.forEach(reveal => {
+            revealOnScroll.observe(reveal);
+        });
+
+        
+        const mapPaths = document.querySelectorAll('.map-path');
+        const tableRows = document.querySelectorAll('.data-table tbody tr');
+
+        mapPaths.forEach(path => {
+            path.addEventListener('mouseenter', () => {
+                const region = path.getAttribute('data-region');
+                
+                
+                mapPaths.forEach(p => p.classList.remove('active'));
+                tableRows.forEach(r => r.classList.remove('active'));
+                
+                
+                document.querySelectorAll(`.map-path[data-region="${region}"]`).forEach(p => p.classList.add('active'));
+                
+                
+                const row = document.querySelector(`.data-table tr[data-target="${region}"]`);
+                if(row) row.classList.add('active');
+            });
+
+            path.addEventListener('mouseleave', () => {
+                mapPaths.forEach(p => p.classList.remove('active'));
+                tableRows.forEach(r => r.classList.remove('active'));
+            });
+        });
+
+        tableRows.forEach(row => {
+            row.addEventListener('mouseenter', () => {
+                const target = row.getAttribute('data-target');
+                
+                mapPaths.forEach(p => p.classList.remove('active'));
+                document.querySelectorAll(`.map-path[data-region="${target}"]`).forEach(p => p.classList.add('active'));
+            });
+            
+            row.addEventListener('mouseleave', () => {
+                mapPaths.forEach(p => p.classList.remove('active'));
+            });
+        });
+
+        
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+
+</body></html>
