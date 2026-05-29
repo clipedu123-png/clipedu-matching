@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>CLIPEDU · 원생매칭 플랫폼</title>
+<meta name="responsive-build" content="2026-05-27-v2">
+<meta name="description" content="원생 유지, 자신 있으신가요? 원생 유입은 우리가 할게요! 검증된 학부모와 학원을 데이터로 매칭하는 원생매칭 플랫폼.">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/favicon.png">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" as="style" crossorigin
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+
+<!-- External CSS -->
+<link rel="stylesheet" href="css/styles.css">
+
+<!-- Supabase Client Library (UMD) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0"></script>
+
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header id="hdr">
+  <div class="wrap nav">
+    <a href="#top" class="brand" aria-label="CLIPEDU 홈">
+      <img src="assets/clipedu-logo.png" alt="CLIPEDU" class="brand-logo">
+      <small>원생매칭 플랫폼</small>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <button class="nav-close" id="navClose" aria-label="메뉴 닫기">
+        <span></span>
+        <span></span>
+      </button>
+      <ul>
+        <li><a href="#about">서비스</a></li>
+        <li><a href="#how">매칭 과정</a></li>
+        <li><a href="#reviews">후기</a></li>
+      </ul>
+    </nav>
+    <a href="#apply" class="btn btn-primary nav-cta">원생 매칭 신청</a>
+    <button class="nav-toggle" id="navToggle" aria-label="메뉴 열기" aria-expanded="false" aria-controls="navLinks">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+<div class="nav-backdrop" id="navBackdrop" aria-hidden="true"></div>
+
+<a id="top"></a>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-text">
+        <div class="hero-eyebrow reveal">
+          <span class="kicker">2026 · 원생매칭 플랫폼</span>
+        </div>
+        <h1 class="reveal delay-1">
+          원생 <span class="text-gradient">유지</span>, 자신 있으신가요?<br>
+          원생 <span class="text-gradient">유입</span>은 우리가 할게요!
+        </h1>
+        <p class="hero-sub reveal delay-2">
+          전국 <strong>매달 8,500명 학부모</strong>의 문의를 검증해<br>우리 학원에 딱 맞는 원생만 연결해 드립니다.
+        </p>
+        <p class="hero-lead reveal delay-2">교육사업 16년 노하우, 원생 유입은 전문가에게 맡겨보세요.</p>
+        <div class="hero-actions reveal delay-3">
+          <a href="#apply" class="btn btn-primary btn-primary-lg">
+            원생 매칭 신청하기 <span class="arrow">→</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <!-- Proof Strip (Hero 하단 · full-bleed marquee) -->
+  <div class="hero-proof reveal">
+    <div class="hero-proof-inner">
+      <div class="hero-proof-headline">
+        이미 전국 <span class="em">1,200여 개</span>의 학원이 매달 <span class="em">8,500명 학부모</span>와 만나고 있어요!
+      </div>
+      <div class="hero-proof-marquee">
+        <div class="hero-proof-track">
+          <!-- Set 1 -->
+          <span class="academy"><img src="company logo/dyb.svg" alt="dyb" loading="lazy"></span>
+          <span class="academy"><img src="company logo/made.png" alt="made" loading="lazy"></span>
+          <span class="academy"><img src="company logo/mbest.png" alt="mbest" loading="lazy"></span>
+          <span class="academy"><img src="company logo/slp.png" alt="slp" loading="lazy"></span>
+          <span class="academy"><img src="company logo/smma.jpg" alt="smma" loading="lazy"></span>
+          <span class="academy"><img src="company logo/soma.png" alt="soma" loading="lazy"></span>
+          <span class="academy"><img src="company logo/ybm.png" alt="ybm" loading="lazy"></span>
+          <span class="academy"><img src="company logo/메가스터디.jpg" alt="메가스터디" loading="lazy"></span>
+          <span class="academy"><img src="company logo/스마트해법.svg" alt="스마트해법" loading="lazy"></span>
+          <span class="academy"><img src="company logo/위드피아노.png" alt="위드피아노" loading="lazy"></span>
+          <span class="academy"><img src="company logo/이투스학원.svg" alt="이투스학원" loading="lazy"></span>
+          <span class="academy"><img src="company logo/청솔학원.svg" alt="청솔학원" loading="lazy"></span>
+          <span class="academy"><img src="company logo/튼튼영어.svg" alt="튼튼영어" loading="lazy"></span>
+          <span class="academy"><img src="company logo/하이스트.png" alt="하이스트" loading="lazy"></span>
+          <span class="academy"><img src="company logo/한솔교육.png" alt="한솔교육" loading="lazy"></span>
+          <!-- Set 2 (duplicate for seamless loop) -->
+          <span class="academy"><img src="company logo/dyb.svg" alt="dyb" loading="lazy"></span>
+          <span class="academy"><img src="company logo/made.png" alt="made" loading="lazy"></span>
+          <span class="academy"><img src="company logo/mbest.png" alt="mbest" loading="lazy"></span>
+          <span class="academy"><img src="company logo/slp.png" alt="slp" loading="lazy"></span>
+          <span class="academy"><img src="company logo/smma.jpg" alt="smma" loading="lazy"></span>
+          <span class="academy"><img src="company logo/soma.png" alt="soma" loading="lazy"></span>
+          <span class="academy"><img src="company logo/ybm.png" alt="ybm" loading="lazy"></span>
+          <span class="academy"><img src="company logo/메가스터디.jpg" alt="메가스터디" loading="lazy"></span>
+          <span class="academy"><img src="company logo/스마트해법.svg" alt="스마트해법" loading="lazy"></span>
+          <span class="academy"><img src="company logo/위드피아노.png" alt="위드피아노" loading="lazy"></span>
+          <span class="academy"><img src="company logo/이투스학원.svg" alt="이투스학원" loading="lazy"></span>
+          <span class="academy"><img src="company logo/청솔학원.svg" alt="청솔학원" loading="lazy"></span>
+          <span class="academy"><img src="company logo/튼튼영어.svg" alt="튼튼영어" loading="lazy"></span>
+          <span class="academy"><img src="company logo/하이스트.png" alt="하이스트" loading="lazy"></span>
+          <span class="academy"><img src="company logo/한솔교육.png" alt="한솔교육" loading="lazy"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 01 ABOUT — 2-col: text(L) + V2 persona graphic(R) ============ -->
+<section id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <!-- LEFT: header + subtext + 2x2 stats -->
+      <div class="about-content reveal">
+        <div class="sec-label about-label">01 · ABOUT</div>
+        <h2 class="sec-title">학원 홍보부터, 원생 매칭까지<br>모든 부담을 이제 <span class="text-gradient">클립에듀</span>가 줄여드립니다!</h2>
+        <p class="about-subtext">
+          학부모가 가장 궁금해하는 기준 <strong>30가지</strong>를 데이터로 분석해<br>
+          가장 잘 맞는 학원을 찾아드립니다.
+        </p>
+        <div class="about-stats-2x2">
+          <div class="stat-card"><div class="v">60,000+</div><div class="l">누적 매칭 건수</div></div>
+          <div class="stat-card"><div class="v">1,200+</div><div class="l">제휴 교육기관</div></div>
+          <div class="stat-card"><div class="v">98%</div><div class="l">매칭 만족도</div></div>
+          <div class="stat-card"><div class="v">24h</div><div class="l">평균 매칭 응답</div></div>
+        </div>
+      </div>
+
+      <!-- RIGHT: V2 persona storytelling graphic -->
+      <div class="about-graphic reveal delay-1" aria-hidden="true">
+        <!-- Center match core (circular) -->
+        <div class="match-badge">
+          <div class="v">98<span class="pct">%</span></div>
+          <div class="l">매칭 적합도</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 HOW IT WORKS (Sticky) ============ -->
+<section id="how">
+  <div class="wrap">
+    <div class="how-head reveal">
+      <div class="sec-label how-label">02 · HOW IT WORKS</div>
+      <h2 class="sec-title">학부모 신청부터 학원 매칭까지,<br>4단계로 진행됩니다</h2>
+      <p class="sec-sub">매칭부서가 학부모와 학원 사이의 모든 단계를 대신 처리합니다.</p>
+    </div>
+
+    <div class="how-steps-row">
+      <!-- Step 1: 조건 입력 (document form) -->
+      <div class="how-step reveal delay-1" data-step="1">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="9" y1="13" x2="15" y2="13"/>
+            <line x1="9" y1="17" x2="13" y2="17"/>
+          </svg>
+        </div>
+        <div class="step-meta">
+          <span class="num">01</span>
+          <span class="tag">학부모 신청</span>
+        </div>
+        <h3>다양한 유입 경로</h3>
+        <ul class="step-bullets">
+          <li>클립에듀 매칭 광고 (당근·네이버 CPC)</li>
+          <li>종합검사 광고배너 (MBTI·성격유형 등)</li>
+          <li>지인 추천 (매칭 학부모 만족도 기반)</li>
+        </ul>
+      </div>
+
+      <!-- Step 2: 매칭 엔진 (search + sparkle) -->
+      <div class="how-step reveal delay-2" data-step="2">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            <path d="M11 7.5L11.6 9L13 9.6L11.6 10.1L11 11.5L10.4 10.1L9 9.6L10.4 9Z" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
+        <div class="step-meta">
+          <span class="num">02</span>
+          <span class="tag">학부모 상담</span>
+        </div>
+        <h3>맞춤 학원 추천</h3>
+        <p>매칭 엔진 분류 후, 학부모(학생)와의 상담을 통해 조건에 맞는 학원과 지원금을 안내해 드립니다.</p>
+      </div>
+
+      <!-- Step 3: 시간 조율 (calendar + check) -->
+      <div class="how-step reveal delay-3" data-step="3">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <polyline points="9 15 11 17 15 13"/>
+          </svg>
+        </div>
+        <div class="step-meta">
+          <span class="num">03</span>
+          <span class="tag">매칭부서 대행</span>
+        </div>
+        <h3>시간 조율</h3>
+        <p>학부모-원장님 사이 상담 시간 조율을 매칭부서가 대신 처리합니다. 학원 요청 시(레벨테스트·유선 직접안내) 학부모 동의를 거쳐 연락처를 전달해 드려요.</p>
+      </div>
+
+      <!-- Step 4: 피드백 공유 (chat + check) -->
+      <div class="how-step reveal delay-4" data-step="4">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            <polyline points="8 11 11 14 16 9"/>
+          </svg>
+        </div>
+        <div class="step-meta">
+          <span class="num">04</span>
+          <span class="tag">피드백 공유</span>
+        </div>
+        <h3>상담 후 피드백</h3>
+        <p>원장님들이 가장 선호하는 부분이에요. 원장님께 직접 말하기 어려운 민감한 부분도 매칭 상담원에게 진솔히 전해주시면, 그 내용을 원장님께 피드백해 드립니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 WHY CLIPEDU (2-track + Compare 2-card) ============ -->
+<section id="why">
+  <div class="wrap">
+    <div class="why-head reveal">
+      <div class="sec-label why-label">03 · WHY CLIPEDU</div>
+      <div class="why-big-num">1,200<span class="plus">+</span></div>
+      <h2 class="sec-title">전국 1,200여 곳의 학원이 선택한 이유</h2>
+      <p class="why-sub">검증된 학부모 유입부터 매칭까지, CLIPEDU가 해결합니다.</p>
+    </div>
+
+    <div class="why-tracks reveal delay-1">
+      <!-- Track 1: 학원 -->
+      <div class="why-track academy">
+        <div class="why-track-head">
+          <div class="badge">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1m4 0h1M9 13h1m4 0h1M9 17h1m4 0h1"/></svg>
+          </div>
+          <div>
+            <div class="who">학원 원장님께</div>
+            <h3>학원 입장에서</h3>
+          </div>
+        </div>
+        <div class="why-list">
+          <div class="why-item">
+            <div class="why-item-head">
+              <span class="no">01</span>
+              <h4>마케팅 부담 ↓</h4>
+            </div>
+            <p>타사 광고 대비, 마케팅 효과 유입 외에 추가적으로 실제 원생 매칭 등록까지, 보장해드리는 구조로 구성되어 있습니다.</p>
+          </div>
+          <div class="why-item highlight">
+            <div class="why-item-head">
+              <span class="no">02</span>
+              <h4>모집, 일정 대행</h4>
+            </div>
+            <p>신규 학부모 응대와 일정조율까지 매칭부서에서 대신 처리합니다.<br>원장님은 수업과 관리에만 집중하세요.</p>
+          </div>
+          <div class="why-item">
+            <div class="why-item-head">
+              <span class="no">03</span>
+              <h4>검증된 학부모만 매칭</h4>
+            </div>
+            <p>조건에 부합하는 학부모(학생)만 안내하므로, 무효한 상담 없이 등록 전환율이 높습니다.</p>
+          </div>
+        </div>
+        <div class="why-track-foot">
+          <span class="arrow">→</span>
+          결과: 수업·운영에만 집중하는 학원 환경
+        </div>
+      </div>
+
+      <!-- Track 2: 학부모 (사회증명) -->
+      <div class="why-track parent">
+        <div class="why-track-head">
+          <div class="badge">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 014-4h.001M9 20v-2a4 4 0 014-4h.001M9 20h6m-9-9a3 3 0 11-6 0 3 3 0 016 0zm9-3a3 3 0 11-6 0 3 3 0 016 0zm6 3a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </div>
+          <div>
+            <div class="who">우리 풀에 모이는</div>
+            <h3>학부모는 이런 분들</h3>
+          </div>
+        </div>
+        <div class="why-list">
+          <div class="why-item">
+            <div class="why-item-head">
+              <span class="no">01</span>
+              <h4>검색 피로 ↓</h4>
+            </div>
+            <p>흩어진 정보를 일일이 찾는 피로 대신,<br>원하는 시간에 상담으로 학원 정보를 알 수 있어요.</p>
+          </div>
+          <div class="why-item">
+            <div class="why-item-head">
+              <span class="no">02</span>
+              <h4>검증된 학원</h4>
+            </div>
+            <p>"우리 아이를 믿고 맡길 수 있는 곳"을 원하는 만큼,<br>검증된 학원만 추천해 드려요.</p>
+          </div>
+          <div class="why-item highlight">
+            <div class="why-item-head">
+              <span class="no">03</span>
+              <h4>연간 30만 원 지원</h4>
+            </div>
+            <p>CLIPEDU와 협업된 학원으로 등록하는 경우, 아이별·학원별 제한 없이 연간 30만 원을 상품권으로 지원합니다.</p>
+          </div>
+        </div>
+        <div class="why-track-foot">
+          <span class="arrow">→</span>
+          결과: 검증된 동기 + 등록 인센티브 = 높은 전환율
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 04 REVIEWS ============ -->
+<section id="reviews">
+  <div class="wrap">
+    <div class="reviews-grid">
+      <div class="reviews-text reveal">
+        <div class="sec-label">04 · REVIEWS</div>
+        <h2 class="sec-title">학부모님, 원장님 <span class="em">실제 후기</span></h2>
+        <p class="lead">
+          매칭 진행, 학원 만족도 조사 등<br>
+          <strong>단 한 글자도 손대지 않은</strong> 실제 대화 자료입니다.
+        </p>
+        <div class="reviews-hover-note">
+          개인정보 모자이크 처리
+        </div>
+      </div>
+
+      <div class="phone-mock reveal delay-1" id="phoneMock">
+        <div class="phone-screen">
+          <div class="phone-track" id="phoneTrack">
+            <!-- images injected by JS from message img/ -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 07 INQUIRY MAP ============ -->
+<section id="inquiry">
+  <div class="wrap">
+    <div class="map-head reveal">
+      <div>
+        <div class="sec-label">05 · INQUIRY MAP</div>
+        <h2 class="sec-title">전국 14개 시·도에서<br>운영 중입니다</h2>
+        <p class="sec-sub">운영 중인 지역을 지도에서 확인해 보세요. 우리 학원 지역의 학부모 문의량도 함께 보입니다.</p>
+      </div>
+      <div class="map-meta">
+        <div class="pill primary"><div class="v">8,500+</div><div class="l">월 평균 학부모 문의량</div></div>
+        <div class="pill primary"><div class="v">18</div><div class="l">서비스 운영 도시</div></div>
+      </div>
+    </div>
+
+    <div class="map-section reveal delay-1">
+      <div class="map-container">
+        <svg viewBox="0 0 400 500" class="map-svg">
+          <defs>
+            <linearGradient id="mapGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#3D8BFF"/>
+              <stop offset="1" stop-color="#34D2DE"/>
+            </linearGradient>
+          </defs>
+          <path class="map-region" data-region="gyeonggi" d="M120,80 L180,70 L220,100 L190,160 L130,160 L110,120 Z"/>
+          <path class="map-region" data-region="seoul" d="M150,120 L180,110 L190,130 L160,150 Z"/>
+          <path class="map-region" data-region="incheon" d="M90,110 L110,110 L120,130 L100,140 Z"/>
+          <path class="map-region" data-region="gangwon" d="M180,60 L280,40 L310,120 L230,160 L190,110 Z"/>
+          <path class="map-region" data-region="chungcheong" d="M130,160 L230,160 L250,230 L180,260 L120,210 Z"/>
+          <path class="map-region prep" data-region="jeolla" d="M100,240 L180,260 L200,340 L140,400 L80,320 Z"/>
+          <path class="map-region" data-region="gyeongsang" d="M230,160 L320,130 L360,250 L280,350 L200,340 L180,260 Z"/>
+          <path class="map-region prep" data-region="jeju" d="M120,440 L160,430 L180,450 L140,470 Z"/>
+          <text class="map-label" x="160" y="125">경기</text>
+          <text class="map-label" x="170" y="138">서울</text>
+          <text class="map-label" x="248" y="100">강원</text>
+          <text class="map-label" x="180" y="210">충청</text>
+          <text class="map-label" x="270" y="240">경상</text>
+          <text class="map-label" x="140" y="320">전라</text>
+          <text class="map-label" x="150" y="453">제주</text>
+        </svg>
+        <div class="map-legend">
+          <span class="map-legend-item"><span class="sw op"></span>서비스 운영 중</span>
+          <span class="map-legend-item"><span class="sw prep"></span>서비스 준비중</span>
+        </div>
+      </div>
+
+      <div class="region-list">
+        <div class="region-row" data-region="gyeonggi">
+          <span class="name">경기도</span>
+          <span class="vol">2,050<em>건/월</em></span>
+        </div>
+        <div class="region-row" data-region="seoul">
+          <span class="name">서울특별시</span>
+          <span class="vol">1,650<em>건/월</em></span>
+        </div>
+        <div class="region-row" data-region="gyeongsang">
+          <span class="name">경상권 (부산·대구·울산·경남)</span>
+          <span class="vol">2,260<em>건/월</em></span>
+        </div>
+        <div class="region-row" data-region="chungcheong">
+          <span class="name">충청권 (대전·세종·청주·천안)</span>
+          <span class="vol">1,100<em>건/월</em></span>
+        </div>
+        <div class="region-row" data-region="incheon">
+          <span class="name">인천광역시</span>
+          <span class="vol">620<em>건/월</em></span>
+        </div>
+        <div class="region-row" data-region="gangwon">
+          <span class="name">강원특별자치도</span>
+          <span class="vol">230<em>건/월</em></span>
+        </div>
+        <div class="region-row prep" data-region="jeolla">
+          <span class="name">전라권 (전북·전남·광주)</span>
+          <span class="vol">서비스 준비중</span>
+        </div>
+        <div class="region-row prep" data-region="jeju">
+          <span class="name">제주특별자치도</span>
+          <span class="vol">서비스 준비중</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 08 APPLY ============ -->
+<section id="apply">
+  <div class="wrap">
+    <div class="apply-grid">
+      <div class="apply-text reveal">
+        <div class="sec-label">06 · APPLY</div>
+        <h2 class="sec-title">지금 우리 학원도<br>원생 매칭 받아볼 수 있을까?</h2>
+        <p class="lead">
+          신청 학부모가 학원보다 더 많아, 협력할 학원을 기다리고 있어요.<br><strong style="color:var(--accent-deep);">24시간 이내로</strong> 담당 부서에서 상담해 드리겠습니다.
+        </p>
+
+        <div class="apply-contact">
+          <div class="row"><span class="k">Email</span><span class="v">clipcp@naver.com</span></div>
+          <div class="row"><span class="k">Phone</span><span class="v">010-7502-3587</span></div>
+          <div class="row"><span class="k">Office</span><span class="v">서울시 금천구 가산디지털2로 34, 12F</span></div>
+          <div class="row"><span class="k">Hours</span><span class="v">10:00 ~ 18:00 (주말·공휴일 제외)</span></div>
+        </div>
+      </div>
+
+      <form class="apply-form-card reveal delay-1" id="applyForm" novalidate>
+        <div class="form-row">
+          <div class="form-field" style="margin-bottom:0;">
+            <label for="af-academy">학원명 <span class="hint">(프랜차이즈는 지점명까지)</span></label>
+            <input type="text" id="af-academy" name="academy" placeholder="예) 클립에듀 어학원 강남점" required>
+          </div>
+          <div class="form-field" style="margin-bottom:0;">
+            <label for="af-phone">전화번호</label>
+            <input type="tel" id="af-phone" name="phone" placeholder="회신받으실 번호를 적어주세요" required>
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="af-addr">사업장 주소</label>
+          <input type="text" id="af-addr" name="address" placeholder="정확한 상담을 위해 입력 필수" required>
+        </div>
+        <div class="form-field">
+          <label>관심 항목 <span class="hint">(중복 선택 가능)</span></label>
+          <div class="form-checks">
+            <label class="form-check">
+              <input type="checkbox" name="interest" value="match">
+              <span class="form-check-text">원생 매칭 운영</span>
+            </label>
+            <label class="form-check">
+              <input type="checkbox" name="interest" value="price">
+              <span class="form-check-text">비용 안내</span>
+            </label>
+            <label class="form-check">
+              <input type="checkbox" name="interest" value="etc">
+              <span class="form-check-text">기타 문의</span>
+            </label>
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="af-msg">신청 내용 <span class="hint">(선택)</span></label>
+          <textarea id="af-msg" name="message" placeholder="자유롭게 적어주세요"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary form-submit">원생 매칭 신청하기 <span class="arrow">→</span></button>
+        <div class="apply-parent-outlink">
+          👨‍👩‍👧 학부모로 매칭 신청하시려면 → <a href="https://keulribedyu-gyoyugbijiweongeum-peiji.onrender.com/education-support.html" target="_blank" rel="noopener">학부모 지원금 페이지</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <a href="#top" class="foot-brand" aria-label="CLIPEDU 홈">
+        <img src="assets/clipedu-logo.png" alt="CLIPEDU" class="foot-logo">
+        <small>원생매칭 플랫폼</small>
+      </a>
+      <ul class="foot-menu">
+        <li><a href="#about">서비스</a></li>
+        <li><a href="#how">매칭 과정</a></li>
+        <li><a href="#reviews">후기</a></li>
+          <li><a href="https://keulribedyu-gyoyugbijiweongeum-peiji.onrender.com/education-support.html" target="_blank" rel="noopener" class="parent-link">학부모 신청 →</a></li>
+      </ul>
+    </div>
+    <div class="foot-bottom">
+      <div class="biz">(주) 클립에듀  |  대표이사 : 최선영  |  사업자등록번호 : 476-81-03519<br>경기도 안양시 동안구 엘에스로 136, A동 10층 1008호  |  Copyright © 2025 클립에듀</div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ STICKY CTA BAR ============ -->
+<div class="sticky-cta" id="stickyCta">
+  <span class="label">지금 신청하면 24시간 내 연락 드려요</span>
+  <a href="#apply" class="btn btn-primary">원생 매칭 신청 <span class="arrow">→</span></a>
+</div>
+
+<!-- ============ EXTERNAL JAVASCRIPT ============ -->
+<script src="js/script.js"></script>
+
+</body>
+</html>
